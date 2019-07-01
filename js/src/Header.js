@@ -1,11 +1,10 @@
-class Header extends SlideElement {
+class Header {
   constructor(container) {
     this.container = container;
     this.header = document.createElement("div");
     this.header.classList.add("header", "clearfix");
   }
   setup() {
-    console.log(super.element);
     // Appending Header on root
     this.container.appendChild(this.header);
 
