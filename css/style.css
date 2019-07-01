@@ -44,10 +44,6 @@
   z-index: 10;
 }
 
-.dropdown-btn:hover+.dropdown-list {
-  display: block;
-}
-
 .dropdown-list div,
 .dropdown-list span {
   padding: 0px 15px;
@@ -129,4 +125,8 @@ div[contenteditable=true] {
 
 div[contenteditable="true"]:hover {
   background-color: rgba(217, 245, 255, 0.5);
+}
+
+.show {
+  display: block;
 }

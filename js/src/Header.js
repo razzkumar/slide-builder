@@ -1,43 +1,54 @@
 class Header {
+
   constructor(container) {
     this.container = container;
-    this.header = document.createElement("div");
-    this.header.classList.add("header", "clearfix");
   }
-  setup() {
-    // Appending Header on root
-    this.container.appendChild(this.header);
 
-    // brand div
-    this.brandContaner = createElementAndAppend(this.header, "div", {
+  setup() {
+    // -------------Creating header container--------
+
+    let header = document.createElement("div");
+    header.classList.add("header", "clearfix");
+
+
+    // Appending Header on root
+
+    this.container.appendChild(header);
+
+    // brand container
+
+    let brandContaner = createElementAndAppend(header, "div", {
       class: "brand"
     });
 
-    this.h1 = createElementAndAppend(this.brandContaner, "h1");
+    let brandH1 = createElementAndAppend(brandContaner, "h1");
 
-    this.linkBrand = createElementAndAppend(this.h1, "a", {
+    let linkBrand = createElementAndAppend(brandH1, "a", {
       href: "/"
     }, BRAND_NAME);
 
     // ul of toolbar
 
-    let ul = createElementAndAppend(this.header, "ul");
+    let ul = createElementAndAppend(header, "ul");
 
     let liOfFileHandler = createElementAndAppend(ul, "li", {
       class: "dropdown-container"
     });
 
     // Adding dropdown button for file handling (i.e import,export);
-    this.fileHandle = createElementAndAppend(liOfFileHandler, "button", {
+    let fileHandle = createElementAndAppend(liOfFileHandler, "button", {
       class: "dropdown-btn"
     }, "File");
+
+    fileHandle.addEventListener("click", this.handleClick);
+
     let fileDropDownlist = createElementAndAppend(liOfFileHandler, "div", {
       class: "dropdown-list"
     });
 
-    this.newSlide = createElementAndAppend(fileDropDownlist, "span", null, "New Slide");
-    this.importSlides = createElementAndAppend(fileDropDownlist, "div", null, '<i class="fa fa-file-import"></i> <span>Import</span>');
-    this.exportSlides = createElementAndAppend(fileDropDownlist, "div", null, '<i class="fa fa-file-export"></i> <span>Export</span>');
+    let newSlide = createElementAndAppend(fileDropDownlist, "span", null, "New Slide");
+    let importSlides = createElementAndAppend(fileDropDownlist, "div", null, '<i class="fa fa-file-import"></i> <span>Import</span>');
+    let exportSlides = createElementAndAppend(fileDropDownlist, "div", null, '<i class="fa fa-file-export"></i> <span>Export</span>');
 
 
     // adding dropdown btn for insert handling
@@ -45,29 +56,30 @@ class Header {
       class: "dropdown-container"
     });
 
-    this.InsertHandle = createElementAndAppend(liOfExportHandler, "button", {
+    let InsertHandle = createElementAndAppend(liOfExportHandler, "button", {
       class: "dropdown-btn"
     }, "Insert");
 
+    InsertHandle.addEventListener("click", this.handleClick);
     let insertDropDownlist = createElementAndAppend(liOfExportHandler, "div", {
       class: "dropdown-list"
     });
 
-    this.importSlides = createElementAndAppend(insertDropDownlist, "div", null, '<i class="fa fa-image"></i> <span>Image</span>');
-    this.exportSlides = createElementAndAppend(insertDropDownlist, "div", null, '<i class="fa fa-video"></i> <span>Video</span>');
+    let insertImage = createElementAndAppend(insertDropDownlist, "div", null, '<i class="fa fa-image"></i> <span>Image</span>');
+    let insertVideo = createElementAndAppend(insertDropDownlist, "div", null, '<i class="fa fa-video"></i> <span>Video</span>');
 
     // adding fontFamily selection
 
     let liOfFontFamilySelect = createElementAndAppend(ul, "li", {
       class: "font-family-select"
     });
-    this.selectFont = createElementAndAppend(liOfFontFamilySelect, "select", {
+    let selectFont = createElementAndAppend(liOfFontFamilySelect, "select", {
       name: "fontFamily",
       id: "fontFamily"
     })
 
     fontFamily.forEach(font => {
-      createElementAndAppend(this.selectFont, "option", {
+      createElementAndAppend(selectFont, "option", {
         value: font
       }, font);
     })
@@ -76,65 +88,143 @@ class Header {
       class: "font-size-input"
     });
 
-    this.fontSize = createElementAndAppend(liOfFontSize, "input", {
+    let fontSize = createElementAndAppend(liOfFontSize, "input", {
       type: "number",
       value: "16"
     });
+    fontSize.addEventListener("change", (e) => {
+      let lastFcused = document.querySelector("#active");
+      if (lastFcused) {
+        lastFcused.style.fontSize = e.target.value + "px";
+        lastFcused && lastFcused.focus();
+      };
+    });
+
+    // ---------------------------Text align section----------------------
 
     let liOfTextAllign = createElementAndAppend(ul, "li", {
       class: "text-align"
     });
 
 
-    // Text align section
-    this.alignLeft = createElementAndAppend(liOfTextAllign, "i", {
+    let alignLeft = createElementAndAppend(liOfTextAllign, "i", {
       title: "Text Align Left",
       class: "fa fa-align-left",
+      dataCmd: "left",
+      cssProperty: "textAlign"
     });
 
-    this.alignCenter = createElementAndAppend(liOfTextAllign, "i", {
+    alignLeft.addEventListener("click", this.formatElement)
+
+    let alignCenter = createElementAndAppend(liOfTextAllign, "i", {
       title: "Text Align Center",
-      class: "fa fa-align-center"
-    });
-    this.alignRight = createElementAndAppend(liOfTextAllign, "i", {
-      title: "Text Align Right",
-      class: "fa fa-align-right"
-    });
-    this.alignCenter.addEventListener("click", () => {
-      document.execCommand("JustifyRight")
-    })
-    this.alignJustify = createElementAndAppend(liOfTextAllign, "i", {
-      title: "Text Align Justify",
-      class: "fa fa-align-justify"
+      class: "fa fa-align-center",
+      dataCmd: "center",
+      cssProperty: "textAlign"
     });
 
-    // Text format section
+    alignCenter.addEventListener("click", this.formatElement);
+
+    let alignRight = createElementAndAppend(liOfTextAllign, "i", {
+      title: "Text Align Right",
+      class: "fa fa-align-right",
+      dataCmd: "right",
+      cssProperty: "textAlign"
+    });
+
+    alignRight.addEventListener("click", this.formatElement)
+
+    let alignJustify = createElementAndAppend(liOfTextAllign, "i", {
+      title: "Text Align Justify",
+      class: "fa fa-align-justify",
+      dataCmd: "justify",
+      cssProperty: "textAlign"
+    });
+
+    alignJustify.addEventListener("click", this.formatElement);
+
+
+    //
     let liOfTextFormat = createElementAndAppend(ul, "li", {
       class: "text-format",
     });
 
-    this.bold = createElementAndAppend(liOfTextFormat, "i", {
+    let bold = createElementAndAppend(liOfTextFormat, "i", {
       class: "fa fa-bold",
+      dataCmd: "bold",
+      cssProperty: "fontWeight"
     });
 
-    this.italic = createElementAndAppend(liOfTextFormat, "i", {
-      class: "fa fa-italic"
+    bold.addEventListener("click", this.formatElement)
+
+    let italic = createElementAndAppend(liOfTextFormat, "i", {
+      class: "fa fa-italic",
+      dataCmd: "italic",
+      cssProperty: "fontStyle"
     });
 
-    this.underline = createElementAndAppend(liOfTextFormat, "i", {
-      class: "fa fa-underline"
+    italic.addEventListener("click", this.formatElement)
+
+    let underline = createElementAndAppend(liOfTextFormat, "i", {
+      class: "fa fa-underline",
+      dataCmd: "underline",
+      cssProperty: "textDecoration"
     });
 
-    this.color = createElementAndAppend(liOfTextFormat, "input", {
+    underline.addEventListener("click", this.formatElement);
+
+
+    let color = createElementAndAppend(liOfTextFormat, "input", {
       type: "color",
       name: "font-color",
-      id: "font-color"
+      value: "#000"
     });
 
+    color.addEventListener("change", (e) => {
+      let lastFcused = document.querySelector("#active");
+      if (lastFcused) {
+        lastFcused.style.color = e.target.value;
+        lastFcused && lastFcused.focus();
+      }
+    });
     // TODO
     let task1 = createElementAndAppend(ul, "li", null, "<a href='#'>Task 5</a>");
     let task2 = createElementAndAppend(ul, "li", null, "<a href='#'>Task 6</a>");
 
-    return this;
+    return header;
+  }
+
+  formatElement(e) {
+
+    let cmd = e.target.getAttribute("dataCmd");
+    let cssProperty = e.target.getAttribute("cssProperty");
+    let lastFcused = document.querySelector("#active");
+
+    if (lastFcused) {
+
+      if (cssProperty === "fontWeight") {
+
+        lastFcused.style[cssProperty] = lastFcused.style.fontWeight === cmd ? "normal" : cmd;
+
+      } else if (cssProperty === "fontStyle") {
+
+        lastFcused.style[cssProperty] = lastFcused.style.fontStyle === cmd ? "normal" : cmd;
+
+      } else if (cssProperty === "textDecoration") {
+
+        lastFcused.style[cssProperty] = lastFcused.style.textDecoration === cmd ? "none" : cmd;
+
+      } else {
+
+        lastFcused.style[cssProperty] = cmd;
+
+      }
+
+      lastFcused && lastFcused.focus();
+    }
+  }
+
+  handleClick(e) {
+    e.target.nextSibling.classList.toggle("show");
   }
 }
