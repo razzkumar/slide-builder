@@ -1,0 +1,132 @@
+.header {
+  width: 95%;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+.header li {
+  display: inline-block;
+  line-height: 40px;
+  margin: 0 10px;
+  list-style: none;
+}
+
+.header li a {
+  line-height: 40px;
+  margin: 0 10px;
+}
+
+.dropdown-container {
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background: none;
+  outline: none;
+  border: none;
+  display: inline-block;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  border: 1px solid #fff;
+}
+
+.dropdown-btn:hover {
+  border: 1px solid gray;
+}
+
+.dropdown-list {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.dropdown-btn:hover+.dropdown-list {
+  display: block;
+}
+
+.dropdown-list div,
+.dropdown-list span {
+  padding: 0px 15px;
+  cursor: pointer;
+  text-align: left;
+  border: 1px solid #fff;
+}
+
+.dropdown-list div:hover {
+  border: 1px solid gray;
+}
+
+
+.font-size-input input[type=number] {
+  width: 60px;
+  padding-left: 5px;
+}
+
+.header li .fa {
+  padding: 10px;
+}
+
+.header li .fa:hover {
+  background: gray;
+}
+
+
+/* Main content styale (ie slide) */
+
+.slide-list {
+  overflow-x: auto;
+  height: 100%;
+}
+
+.slide-item {
+  padding: 1.25rem;
+  height: 150px;
+  margin: 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 2px;
+  display: inline-block;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+
+.slide-item:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.slide-wrapper {
+  border: 1px solid gray;
+  padding: 10px;
+}
+
+.title {
+  min-height: 60px;
+  font-size: 3rem;
+  vertical-align: middle;
+}
+
+.main-content {
+  padding: 10px;
+  border: 1px solid red;
+}
+
+div[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block;
+  color: gray;
+  /* For Firefox */
+}
+
+div[contenteditable=true] {
+  border: 1px dashed #AAA;
+  padding: 5px;
+}
+
+div[contenteditable="true"]:hover {
+  background-color: rgba(217, 245, 255, 0.5);
+}
