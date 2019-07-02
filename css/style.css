@@ -63,10 +63,19 @@
 }
 
 .header li .fa {
-  padding: 10px;
+  margin: 0 2.5px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
 }
 
 .header li .fa:hover {
+  background: gray;
+}
+
+.activeTool {
+  border-radius: 5px;
   background: gray;
 }
 
@@ -76,6 +85,11 @@
 .slide-list {
   overflow-x: auto;
   height: 100%;
+  border: 1px solid #AAA;
+}
+
+.slide-list .title {
+  font-size: 20px !important;
 }
 
 .slide-item {
@@ -100,15 +114,10 @@
   padding: 10px;
 }
 
-.title {
-  min-height: 60px;
-  font-size: 3rem;
-  vertical-align: middle;
-}
-
 .main-content {
   padding: 10px;
   border: 1px solid red;
+  position: relative;
 }
 
 div[contenteditable=true]:empty:before {

@@ -5,6 +5,8 @@ class App {
     this.id = data.id;
     this.container = document.querySelector(`#${this.id}`);
     this.slides = [];
+    this.slideIndex = 1;
+    this.slideData = {};
   }
 
   setup() {
@@ -20,13 +22,17 @@ class App {
       class: "container clearfix",
     }, null, slideContainerStyle);
 
-    createElementAndAppend(slideContainer, 'div', {
+    let slideList = createElementAndAppend(slideContainer, 'div', {
       class: "slide-list",
-      id: "slide-list"
     });
+    this.slideData[`slide${this.slideIndex}`] = {}
+    let firstSlide = new Slide(slideContainer, this.header, this.slideIndex, this.slideData).setup();
 
-    let firstSlide = new Slide(slideContainer, this.header).setup();
+    let a = firstSlide.slideBody.cloneNode(true);
 
+    slideList.appendChild(a);
+
+    this.slideIndex++;
     this.slides.push(firstSlide);
   }
 }

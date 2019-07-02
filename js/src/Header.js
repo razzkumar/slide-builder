@@ -5,18 +5,16 @@ class Header {
   }
 
   setup() {
-    // -------------Creating header container--------
 
+    // -------------Creating header container--------
     let header = document.createElement("div");
     header.classList.add("header", "clearfix");
 
 
     // Appending Header on root
-
     this.container.appendChild(header);
 
     // brand container
-
     let brandContaner = createElementAndAppend(header, "div", {
       class: "brand"
     });
@@ -73,16 +71,28 @@ class Header {
     let liOfFontFamilySelect = createElementAndAppend(ul, "li", {
       class: "font-family-select"
     });
+
     let selectFont = createElementAndAppend(liOfFontFamilySelect, "select", {
       name: "fontFamily",
-      id: "fontFamily"
+      id: "fontFamily",
+      value: "sans-serif"
     })
 
-    fontFamily.forEach(font => {
+    // list of fontFamily is decleared on constant.js
+
+    FONT_FAMILY_LIST.forEach(font => {
       createElementAndAppend(selectFont, "option", {
-        value: font
-      }, font);
-    })
+        value: font.fontFamily,
+      }, font.value);
+    });
+
+    selectFont.addEventListener("change", (e) => {
+      let lastFcused = document.querySelector("[dataToolbarActive='true']");
+      if (lastFcused) {
+        lastFcused.style.fontFamily = e.target.value;
+      };
+    });
+
 
     let liOfFontSize = createElementAndAppend(ul, "li", {
       class: "font-size-input"
@@ -90,98 +100,42 @@ class Header {
 
     let fontSize = createElementAndAppend(liOfFontSize, "input", {
       type: "number",
-      value: "16"
+      value: "16",
+      id: "fontSize"
     });
+
     fontSize.addEventListener("change", (e) => {
-      let lastFcused = document.querySelector("#active");
+      let lastFcused = document.querySelector("[dataToolbarActive='true']");
       if (lastFcused) {
         lastFcused.style.fontSize = e.target.value + "px";
-        lastFcused && lastFcused.focus();
       };
     });
 
-    // ---------------------------Text align section----------------------
 
-    let liOfTextAllign = createElementAndAppend(ul, "li", {
+    // -------------------Text align element container----------------------
+    this.liOfTextAllign = createElementAndAppend(ul, "li", {
       class: "text-align"
     });
 
-
-    let alignLeft = createElementAndAppend(liOfTextAllign, "i", {
-      title: "Text Align Left",
-      class: "fa fa-align-left",
-      dataCmd: "left",
-      cssProperty: "textAlign"
-    });
-
-    alignLeft.addEventListener("click", this.formatElement)
-
-    let alignCenter = createElementAndAppend(liOfTextAllign, "i", {
-      title: "Text Align Center",
-      class: "fa fa-align-center",
-      dataCmd: "center",
-      cssProperty: "textAlign"
-    });
-
-    alignCenter.addEventListener("click", this.formatElement);
-
-    let alignRight = createElementAndAppend(liOfTextAllign, "i", {
-      title: "Text Align Right",
-      class: "fa fa-align-right",
-      dataCmd: "right",
-      cssProperty: "textAlign"
-    });
-
-    alignRight.addEventListener("click", this.formatElement)
-
-    let alignJustify = createElementAndAppend(liOfTextAllign, "i", {
-      title: "Text Align Justify",
-      class: "fa fa-align-justify",
-      dataCmd: "justify",
-      cssProperty: "textAlign"
-    });
-
-    alignJustify.addEventListener("click", this.formatElement);
-
-
-    //
-    let liOfTextFormat = createElementAndAppend(ul, "li", {
+    //-----------------Text fromat element  container----------------------------
+    this.liOfTextFormat = createElementAndAppend(ul, "li", {
       class: "text-format",
     });
 
-    let bold = createElementAndAppend(liOfTextFormat, "i", {
-      class: "fa fa-bold",
-      dataCmd: "bold",
-      cssProperty: "fontWeight"
+    //-----toolbarActionsProperty  is defined on util.js------------------ 
+    toolbarActionsProperty.forEach(d => {
+      let tool = createElementAndAppend(this[d.parentElem], d.elem, d.attr);
+      tool.addEventListener("click", this.formatElement)
     });
 
-    bold.addEventListener("click", this.formatElement)
-
-    let italic = createElementAndAppend(liOfTextFormat, "i", {
-      class: "fa fa-italic",
-      dataCmd: "italic",
-      cssProperty: "fontStyle"
-    });
-
-    italic.addEventListener("click", this.formatElement)
-
-    let underline = createElementAndAppend(liOfTextFormat, "i", {
-      class: "fa fa-underline",
-      dataCmd: "underline",
-      cssProperty: "textDecoration"
-    });
-
-    underline.addEventListener("click", this.formatElement);
-
-
-    let color = createElementAndAppend(liOfTextFormat, "input", {
+    let color = createElementAndAppend(this.liOfTextFormat, "input", {
       type: "color",
       name: "font-color",
       value: "#000"
     });
 
     color.addEventListener("change", (e) => {
-      let lastFcused = document.querySelector("#active");
+      let lastFcused = document.querySelector("[dataToolbarActive='true']");
       if (lastFcused) {
         lastFcused.style.color = e.target.value;
         lastFcused && lastFcused.focus();
@@ -195,31 +149,51 @@ class Header {
   }
 
   formatElement(e) {
-
     let cmd = e.target.getAttribute("dataCmd");
     let cssProperty = e.target.getAttribute("cssProperty");
-    let lastFcused = document.querySelector("#active");
-
+    let lastFcused = document.querySelector("[dataToolbarActive='true']");
     if (lastFcused) {
 
+      // bold handler
       if (cssProperty === "fontWeight") {
-
-        lastFcused.style[cssProperty] = lastFcused.style.fontWeight === cmd ? "normal" : cmd;
-
+        if (lastFcused.style.fontWeight !== cmd) {
+          e.target.classList.add("activeTool");
+          lastFcused.style[cssProperty] = cmd;
+        } else {
+          e.target.classList.remove("activeTool");
+          lastFcused.style[cssProperty] = "normal";
+        }
+        // italic handler
       } else if (cssProperty === "fontStyle") {
-
-        lastFcused.style[cssProperty] = lastFcused.style.fontStyle === cmd ? "normal" : cmd;
-
+        if (lastFcused.style.fontStyle !== cmd) {
+          e.target.classList.add("activeTool");
+          lastFcused.style.fontStyle = cmd;
+        } else {
+          e.target.classList.remove("activeTool");
+          lastFcused.style[cssProperty] = "normal";
+        }
+        // underline handle
       } else if (cssProperty === "textDecoration") {
-
-        lastFcused.style[cssProperty] = lastFcused.style.textDecoration === cmd ? "none" : cmd;
-
+        if (lastFcused.style.textDecoration !== cmd) {
+          e.target.classList.add("activeTool");
+          lastFcused.style[cssProperty] = cmd;
+        } else {
+          e.target.classList.remove("activeTool");
+          lastFcused.style[cssProperty] = "none";
+        }
+        // text-align (center,left,right,justify) handler
       } else {
-
-        lastFcused.style[cssProperty] = cmd;
-
+        let oldActiveAlign = document.querySelector(".text-align>.activeTool");
+        if (lastFcused.style[cssProperty] !== cmd) {
+          oldActiveAlign && oldActiveAlign.classList.remove("activeTool");
+          e.target.classList.add("activeTool");
+          lastFcused.style[cssProperty] = cmd;
+        } else {
+          if (lastFcused.style[cssProperty] !== cmd) {
+            e.target.classList.remove("activeTool");
+          };
+        }
       }
-
       lastFcused && lastFcused.focus();
     }
   }
