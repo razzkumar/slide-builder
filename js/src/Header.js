@@ -8,7 +8,7 @@ class Header {
 
     // -------------Creating header container--------
     let header = document.createElement("div");
-    header.classList.add("header", "clearfix");
+    header.classList.add("header", "container", "clearfix");
 
 
     // Appending Header on root
@@ -35,7 +35,7 @@ class Header {
 
     // Adding dropdown button for file handling (i.e import,export);
     let fileHandle = createElementAndAppend(liOfFileHandler, "button", {
-      class: "dropdown-btn"
+      class: "btn dropdown-btn"
     }, "File");
 
     fileHandle.addEventListener("click", this.handleClick);
@@ -55,7 +55,7 @@ class Header {
     });
 
     let InsertHandle = createElementAndAppend(liOfExportHandler, "button", {
-      class: "dropdown-btn"
+      class: "btn dropdown-btn"
     }, "Insert");
 
     InsertHandle.addEventListener("click", this.handleClick);
@@ -141,13 +141,61 @@ class Header {
         lastFcused && lastFcused.focus();
       }
     });
+
+    let backgroundColor = createElementAndAppend(ul, "input", {
+      type: "color",
+      name: "font-color",
+      value: "#000"
+    });
+
+    backgroundColor.addEventListener("change", (e) => {
+      let lastFcused = document.querySelector("[dataToolbarActive='true']");
+      if (lastFcused) {
+        lastFcused.style.backgroundColor = e.target.value;
+        lastFcused && lastFcused.focus();
+      }
+    });
     // TODO
-    let task1 = createElementAndAppend(ul, "li", null, "<a href='#'>Task 5</a>");
+    let task1 = createElementAndAppend(ul, "button", {
+      class: "btn"
+    }, "Theme", );
     let task2 = createElementAndAppend(ul, "li", null, "<a href='#'>Task 6</a>");
 
+    // play btn
+    let playBtn = createElementAndAppend(header, "button", {
+      class: "btn"
+    }, "<i class='fa fa-play'></i>&nbsp; Play", {
+      float: "right",
+      padding: "5px 20px",
+      width: "100px",
+      textAllign: "center"
+    });
+    playBtn.addEventListener("click", this.openFullscreen);
     return header;
   }
 
+  /* Function to open fullscreen mode */
+  openFullscreen(e) {
+    let elem = document.querySelector(".slide-wrapper #slide1");
+
+    let allContentEditAble = elem.querySelectorAll("[contenteditable='true']");
+    allContentEditAble.forEach(elem => {
+      elem.setAttribute("contenteditable", "false");
+    })
+
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      /* Chrome, Safari & Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  }
   formatElement(e) {
     let cmd = e.target.getAttribute("dataCmd");
     let cssProperty = e.target.getAttribute("cssProperty");

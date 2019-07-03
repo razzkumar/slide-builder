@@ -17,7 +17,7 @@
 /*  */
 .slide-list {
   float: left;
-  width: calc(20% - 40px);
+  width: calc(20% - 10px);
 }
 
 

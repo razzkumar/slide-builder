@@ -7,6 +7,7 @@ class App {
     this.slides = [];
     this.slideIndex = 1;
     this.slideData = {};
+    this.isFullScreen = false;
   }
 
   setup() {
@@ -25,15 +26,45 @@ class App {
     let slideList = createElementAndAppend(slideContainer, 'div', {
       class: "slide-list",
     });
-    this.slideData[`slide${this.slideIndex}`] = {}
+
+    this.slideData[`slide${this.slideIndex}`] = {};
+
     let firstSlide = new Slide(slideContainer, this.header, this.slideIndex, this.slideData).setup();
 
-    let a = firstSlide.slideBody.cloneNode(true);
+    // Cloning slideBody for list
+    let slideBody = firstSlide.slideBody.cloneNode(true);
+    styleElement(slideBody, {
+      width: window.getComputedStyle(firstSlide.slideBody).width,
+      height: window.getComputedStyle(firstSlide.slideBody).height,
+      transformOrigin: "top left",
+      left: "50%",
+      transform: "scale(0.22) translateX(-50%)"
+    });
 
-    slideList.appendChild(a);
+    slideList.appendChild(slideBody);
+
+    // removing contenteditable attribute on slide list
+    let allContentEditAble = slideBody.querySelectorAll("[contenteditable='true']");
+    allContentEditAble.forEach(elem => {
+      elem.removeAttribute("contenteditable");
+    })
 
     this.slideIndex++;
     this.slides.push(firstSlide);
+
+    document.addEventListener('fullscreenchange', () => {
+      if (this.isFullScreen) {
+        this.isFullScreen = false;
+        let elem = document.querySelector(".slide-wrapper #slide1");
+        let allContentEditAble = elem.querySelectorAll("[contenteditable='false']");
+        allContentEditAble.forEach(elem => {
+          elem.setAttribute("contenteditable", "true");
+        })
+
+      } else {
+        this.isFullScreen = true;
+      }
+    });
   }
 }
 

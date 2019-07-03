@@ -24,7 +24,7 @@ class Slide {
     this.slideData[`slide${this.slideIndex}`][`elemUserNote`] = {};
 
     // UserNote
-    new SlideElement(slideWrapper, "div", 1, "UserNote", {
+    new SlideElement(slideWrapper, "div", this.slideIndex, "UserNote", {
       class: 'user-note',
       title: 'Note of the Slide',
       id: `slide${this.slideIndex}ElementUserNote`,
@@ -42,7 +42,9 @@ class Slide {
       id: `slide${this.slideIndex}ElementTitle`,
       placeholder: "Enter Title here..."
     }, {
-      fontSize: "48px"
+      fontSize: "48px",
+      minHeight: "60px",
+      padding: "10px"
     }, this.slideData).setup();
 
 
@@ -54,17 +56,17 @@ class Slide {
       height: contentWrapperHeight + "px"
     });
 
-
     this.slideData[`slide${this.slideIndex}`][`elem${this.elementCount}`] = {};
-    let defaultElement = new SlideElement(slideContentWrapper, "div", 1, this.elementCount, null, null, this.slideData).setup();
+    let defaultElement = new SlideElement(slideContentWrapper, "div", this.slideIndex, this.elementCount, null, null, this.slideData).setup();
     this.elementCount++;
 
     this.slideData[`slide${this.slideIndex}`][`elem${this.elementCount}`] = {};
-    let secondElement = new SlideElement(slideContentWrapper, "div", 1, this.elementCount, null, null, this.slideData).setup();
+    let secondElement = new SlideElement(slideContentWrapper, "div", this.slideIndex, this.elementCount, null, null, this.slideData).setup();
 
     this.elementCount++;
     this.slideData[`slide${this.slideIndex}`][`elem${this.elementCount}`] = {};
-    let secondElement1 = new SlideElement(slideContentWrapper, "div", 1, this.elementCount, null, null, this.slideData).setup();
+
+    let secondElement1 = new SlideElement(slideContentWrapper, "div", this.slideIndex, this.elementCount, null, null, this.slideData).setup();
     return this;
   }
 }

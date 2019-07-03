@@ -26,8 +26,12 @@ class SlideElement {
       }, null, {
         position: "absolute",
         top: `${top}px`,
-        height: "30px",
-        // width: this.parentElem.clientWidth - GAP_BETWEEN_ELEMENT + "px",
+        padding: "10px",
+        minHeight: "30px",
+        height: elementCount === 2 ? "300px" : "unset",
+        width: elementCount === 2 ? "600px" : "200px",
+        minWidth: "200px",
+        maxWidth: this.parentElem.clientWidth - GAP_BETWEEN_ELEMENT + "px",
         fontSize: document.querySelector("#fontSize").value
       })
     }
@@ -35,14 +39,15 @@ class SlideElement {
 
   setup() {
 
+    // Drag and drop 
+    dragAndDropElement(this.element, this.parentElem);
+
+    // let resizerContainer = createElementAndAppend(this.)
+
     this.slideData[`slide${this.slideIndex}`][`elem${this.elementCount}`]["style"] = formatStyleToStore(this.element.style);
-
     this.element.addEventListener("focus", (e) => {
-
       let activeElem = document.querySelector("[dataToolbarActive='true']");
-
       activeElem && activeElem.removeAttribute("dataToolbarActive");
-
       toolbarActionsProperty.forEach(d => {
         let activeTool = document.querySelector(`[dataCmd=${d.attr.dataCmd}]`);
         if (e.target.style[d.attr.cssProperty] === d.attr.dataCmd) {
@@ -71,16 +76,10 @@ class SlideElement {
 
 
     this.element.addEventListener("input", (e) => {
-
       let elemOnList = document.querySelector(`.slide-list #slide${this.slideIndex}Element${this.elementCount}`);
-
-      elemOnList.innerHTML = this.element.innerText;
+      elemOnList.innerHTML = this.element.innerHTML;
       this.slideData[`slide${this.slideIndex}`][`elem${this.elementCount}`]["content"] = this.element.innerText;
-
     }, true);
-
-    // Drag and drop 
-    dragAndDropElement(this.element, this.parentElem);
 
     return this.element;
   }
