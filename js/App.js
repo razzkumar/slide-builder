@@ -44,6 +44,7 @@ class App {
     slideList.appendChild(slideBody);
 
     // removing contenteditable attribute on slide list
+
     let allContentEditAble = slideBody.querySelectorAll("[contenteditable='true']");
     allContentEditAble.forEach(elem => {
       elem.removeAttribute("contenteditable");

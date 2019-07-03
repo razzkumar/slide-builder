@@ -128,7 +128,9 @@ div[contenteditable=true]:empty:before {
 
 div[contenteditable=true] {
   border: 1px dashed #AAA;
+  width: 100%;
   padding: 5px;
+  height: 100%;
 }
 
 div[contenteditable="true"]:hover {
@@ -139,25 +141,27 @@ div[contenteditable="true"]:hover {
   display: block;
 }
 
+.resizer {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  cursor: nwse-resize;
+  width: 10px;
+  height: 10px;
+  background-color: "#fff";
+  border: 2px solid #4286f4;
+  border-radius: 50%;
+}
+
+.dragger {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 5px;
+  cursor: grab;
+}
+
 /* Full screen style */
-.slide-wrapper .slide-body:-webkit-full-screen {
-  background-color: #fff;
-  width: 100vw;
-  height: 100vh;
-}
-
-.slide-wrapper .slide-body:-moz-full-screen {
-  background-color: #fff;
-  width: 100vw;
-  height: 100vh;
-}
-
-.slide-wrapper .slide-body:-ms-fullscreen {
-  background-color: #fff;
-  width: 100vw;
-  height: 100vh;
-}
-
 .slide-wrapper .slide-body:fullscreen {
   background-color: #fff;
   width: 100vw;

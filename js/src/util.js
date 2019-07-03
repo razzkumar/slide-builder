@@ -35,39 +35,77 @@ const dragAndDropElement = (element, parentElem) => {
 
   let parentX = parentElem.getBoundingClientRect().left;
   let parentY = parentElem.getBoundingClientRect().top;
+  let shiftX = 0;
+  let shiftY = 0;
 
-  element.addEventListener("mousedown", (event) => {
+  let dragger = element.querySelector(".dragger");
 
-    let shiftX = event.clientX - element.getBoundingClientRect().left;
-    let shiftY = event.clientY - element.getBoundingClientRect().top;
+  dragger.addEventListener("mousedown", (event) => {
+    event.preventDefault();
 
-
+    shiftX = event.clientX - element.getBoundingClientRect().left;
+    shiftY = event.clientY - element.getBoundingClientRect().top;
 
     moveAt(event.clientX, event.clientY);
-
-    function moveAt(pageX, pageY) {
-
-      element.style.left = pageX - shiftX - parentX + 'px';
-      element.style.top = pageY - shiftY - parentY + 'px';
-
-    }
-
-    function onMouseMove(event) {
-      moveAt(event.clientX, event.clientY);
-    }
 
     // move the element on mousemove
     parentElem.addEventListener('mousemove', onMouseMove);
     // drop the element, remove unneeded handlers
-    element.onmouseup = function () {
+    dragger.onmouseup = function () {
+      dragger.style.cursor = "grab";
+      dragger.style.cursor = "-moz-grabb";
+      dragger.style.cursor = "-webkit-grabb";
       parentElem.removeEventListener('mousemove', onMouseMove);
-      element.onmouseup = null;
+      dragger.onmouseup = null;
     };
 
   });
 
+  function onMouseMove(event) {
+    moveAt(event.clientX, event.clientY);
+  }
+
+  function moveAt(pageX, pageY) {
+    dragger.style.cursor = "grabbing";
+    dragger.style.cursor = "-moz-grabbing";
+    dragger.style.cursor = "-webkit-grabbing";
+    element.style.left = pageX - shiftX - parentX + 'px';
+    element.style.top = pageY - shiftY - parentY + 'px';
+  }
+
   //preventing default drag and drop
-  element.addEventListener("dragstart", () => false);
+  dragger.addEventListener("dragstart", () => false);
+}
+
+const makeResizableDiv = (element) => {
+  // const element = document.querySelector(div);
+  const resizer = element.querySelector('.resizer');
+
+  let original_width = 0;
+  let original_height = 0;
+  let original_mouse_x = 0;
+  let original_mouse_y = 0;
+
+  resizer.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    original_width = element.getBoundingClientRect().width;
+    original_height = element.getBoundingClientRect().height;
+    original_mouse_x = e.pageX;
+    original_mouse_y = e.pageY;
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResize);
+  })
+
+  function resize(e) {
+    const width = original_width + (e.pageX - original_mouse_x);
+    const height = original_height + (e.pageY - original_mouse_y);
+    element.style.width = width + 'px'
+    element.style.height = height + 'px'
+  }
+
+  function stopResize() {
+    window.removeEventListener('mousemove', resize)
+  }
 }
 
 // toolbar element property 

@@ -79,7 +79,6 @@ class Header {
     })
 
     // list of fontFamily is decleared on constant.js
-
     FONT_FAMILY_LIST.forEach(font => {
       createElementAndAppend(selectFont, "option", {
         value: font.fontFamily,
@@ -112,17 +111,19 @@ class Header {
     });
 
 
-    // -------------------Text align element container----------------------
+    // -------------------Text align element container-----------------------
+
     this.liOfTextAllign = createElementAndAppend(ul, "li", {
       class: "text-align"
     });
 
-    //-----------------Text fromat element  container----------------------------
+    //-----------------Text fromat element  container-------------------------
+
     this.liOfTextFormat = createElementAndAppend(ul, "li", {
       class: "text-format",
     });
 
-    //-----toolbarActionsProperty  is defined on util.js------------------ 
+    //-----toolbarActionsProperty  is defined on util.js-----------------------
     toolbarActionsProperty.forEach(d => {
       let tool = createElementAndAppend(this[d.parentElem], d.elem, d.attr);
       tool.addEventListener("click", this.formatElement)
@@ -155,6 +156,7 @@ class Header {
         lastFcused && lastFcused.focus();
       }
     });
+
     // TODO
     let task1 = createElementAndAppend(ul, "button", {
       class: "btn"

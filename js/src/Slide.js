@@ -24,6 +24,7 @@ class Slide {
     this.slideData[`slide${this.slideIndex}`][`elemUserNote`] = {};
 
     // UserNote
+
     new SlideElement(slideWrapper, "div", this.slideIndex, "UserNote", {
       class: 'user-note',
       title: 'Note of the Slide',

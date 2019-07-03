@@ -15,36 +15,54 @@ class SlideElement {
 
     } else {
 
-      let upperElement = document.querySelector(`#slide${slideIndex}Element${elementCount-1}`);
+      let upperElement = document.querySelector(`#slide${slideIndex}Element${elementCount-1}Container`);
 
       let top = upperElement ? upperElement.offsetTop + upperElement.offsetHeight + GAP_BETWEEN_ELEMENT / 2 : GAP_BETWEEN_ELEMENT / 2;
 
-      this.element = createElementAndAppend(parentElem, elemtype, {
-        contenteditable: true,
-        id: `slide${slideIndex}Element${elementCount}`,
-        placeholder: "Please start writing..."
+      this.resizableContainer = createElementAndAppend(this.parentElem, "div", {
+        id: `slide${slideIndex}Element${elementCount}Container`,
       }, null, {
         position: "absolute",
         top: `${top}px`,
-        padding: "10px",
         minHeight: "30px",
         height: elementCount === 2 ? "300px" : "unset",
         width: elementCount === 2 ? "600px" : "200px",
         minWidth: "200px",
         maxWidth: this.parentElem.clientWidth - GAP_BETWEEN_ELEMENT + "px",
         fontSize: document.querySelector("#fontSize").value
-      })
+      });
+
+
+      this.element = createElementAndAppend(this.resizableContainer, elemtype, {
+        contenteditable: true,
+        id: `slide${slideIndex}Element${elementCount}`,
+        placeholder: "Please start writing..."
+      }, null)
     }
   }
 
   setup() {
 
-    // Drag and drop 
-    dragAndDropElement(this.element, this.parentElem);
+    if (this.resizableContainer) {
 
-    // let resizerContainer = createElementAndAppend(this.)
+      createElementAndAppend(this.resizableContainer, "div", {
+        class: "resizer"
+      });
+
+      createElementAndAppend(this.resizableContainer, "div", {
+        class: "dragger"
+      });
+
+      // Drag and drop only to the content not title and comment section
+
+      dragAndDropElement(this.resizableContainer, this.parentElem);
+
+      // make resizeable
+      makeResizableDiv(this.resizableContainer);
+    }
 
     this.slideData[`slide${this.slideIndex}`][`elem${this.elementCount}`]["style"] = formatStyleToStore(this.element.style);
+
     this.element.addEventListener("focus", (e) => {
       let activeElem = document.querySelector("[dataToolbarActive='true']");
       activeElem && activeElem.removeAttribute("dataToolbarActive");
