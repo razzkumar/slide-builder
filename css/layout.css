@@ -1,28 +1,28 @@
 .clearfix::after {
-  content: " ";
-  display: table;
-  clear: both;
+    content: " ";
+    display: table;
+    clear: both;
 }
 
 .container {
-  width: 95%;
-  margin: 0 auto;
+    width: 95%;
+    margin: 0 auto;
 }
 
 .brand,
 .header ul {
-  float: left;
+    float: left;
 }
 
 /*  */
 .slide-list {
-  float: left;
-  width: calc(20% - 10px);
+    float: left;
+    width: calc(20% - 10px);
 }
 
 
 .slide-wrapper {
-  float: right;
-  margin: 0 auto;
-  width: 80%;
+    float: right;
+    margin: 0 auto;
+    width: 80%;
 }

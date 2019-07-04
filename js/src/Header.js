@@ -14,75 +14,135 @@ class Header {
     // Appending Header on root
     this.container.appendChild(header);
 
-    // brand container
-    let brandContaner = createElementAndAppend(header, "div", {
-      class: "brand"
+    let brandContaner = createElementAndAppend({
+      parentElem: header,
+      elemType: "div",
+      attr: {
+        class: "brand"
+      },
+      innerHTML: `<h1><a href='/'>${BRAND_NAME}</a></h1>`
     });
-
-    let brandH1 = createElementAndAppend(brandContaner, "h1");
-
-    let linkBrand = createElementAndAppend(brandH1, "a", {
-      href: "/"
-    }, BRAND_NAME);
-
     // ul of toolbar
 
-    let ul = createElementAndAppend(header, "ul");
+    let ul = createElementAndAppend({
+      parentElem: header,
+      elemType: "ul"
+    });
 
-    let liOfFileHandler = createElementAndAppend(ul, "li", {
-      class: "dropdown-container"
+    let liOfFileHandler = createElementAndAppend({
+      parentElem: ul,
+      elemType: "li",
+      attr: {
+        class: "dropdown-container"
+      }
     });
 
     // Adding dropdown button for file handling (i.e import,export);
-    let fileHandle = createElementAndAppend(liOfFileHandler, "button", {
-      class: "btn dropdown-btn"
-    }, "File");
+    let fileHandle = createElementAndAppend({
+      parentElem: liOfFileHandler,
+      elemType: "button",
+      attr: {
+        class: "btn dropdown-btn"
+      },
+      innerText: "File"
+    });
 
     fileHandle.addEventListener("click", this.handleClick);
 
-    let fileDropDownlist = createElementAndAppend(liOfFileHandler, "div", {
-      class: "dropdown-list"
+    let fileDropDownlist = createElementAndAppend({
+      parentElem: liOfFileHandler,
+      elemType: "div",
+      attr: {
+        class: "dropdown-list"
+      }
     });
 
-    let newSlide = createElementAndAppend(fileDropDownlist, "span", null, "New Slide");
-    let importSlides = createElementAndAppend(fileDropDownlist, "div", null, '<i class="fa fa-file-import"></i> <span>Import</span>');
-    let exportSlides = createElementAndAppend(fileDropDownlist, "div", null, '<i class="fa fa-file-export"></i> <span>Export</span>');
+    let newSlide = createElementAndAppend({
+      parentElem: fileDropDownlist,
+      elemType: "span",
+      innerText: "New Slide"
+    });
+    let importSlides = createElementAndAppend({
+      parentElem: fileDropDownlist,
+      elemType: "div",
+      innerHTML: '<i class="fa fa-file-import"></i> <span>Import</span>'
+    });
+    let exportSlides = createElementAndAppend({
+      parentElem: fileDropDownlist,
+      elemType: "div",
+      attr: null,
+      innerHTML: '<i class="fa fa-file-export"></i> <span>Export</span>'
+    });
 
 
     // adding dropdown btn for insert handling
-    let liOfExportHandler = createElementAndAppend(ul, "li", {
-      class: "dropdown-container"
+    let liOfExportHandler = createElementAndAppend({
+      parentElem: ul,
+      elemType: "li",
+      attr: {
+        class: "dropdown-container"
+      }
     });
 
-    let InsertHandle = createElementAndAppend(liOfExportHandler, "button", {
-      class: "btn dropdown-btn"
-    }, "Insert");
+    let InsertHandle = createElementAndAppend({
+      parentElem: liOfExportHandler,
+      elemType: "button",
+      attr: {
+        class: "btn dropdown-btn"
+      },
+      innerText: "Insert"
+    });
 
     InsertHandle.addEventListener("click", this.handleClick);
-    let insertDropDownlist = createElementAndAppend(liOfExportHandler, "div", {
-      class: "dropdown-list"
+    let insertDropDownlist = createElementAndAppend({
+      parentElem: liOfExportHandler,
+      elemType: "div",
+      attr: {
+        class: "dropdown-list"
+      }
     });
 
-    let insertImage = createElementAndAppend(insertDropDownlist, "div", null, '<i class="fa fa-image"></i> <span>Image</span>');
-    let insertVideo = createElementAndAppend(insertDropDownlist, "div", null, '<i class="fa fa-video"></i> <span>Video</span>');
+    let insertImage = createElementAndAppend({
+      parentElem: insertDropDownlist,
+      elemType: "div",
+      innerHTML: '<i class="fa fa-image"></i> <span>Image</span>'
+    });
+    let insertVideo = createElementAndAppend({
+      parentElem: insertDropDownlist,
+      elemType: "div",
+      innerHTML: '<i class="fa fa-video"></i> <span>Video</span>'
+    });
 
     // adding fontFamily selection
 
-    let liOfFontFamilySelect = createElementAndAppend(ul, "li", {
-      class: "font-family-select"
+    let liOfFontFamilySelect = createElementAndAppend({
+      parentElem: ul,
+      elemType: "li",
+      attr: {
+        class: "font-family-select"
+      }
     });
 
-    let selectFont = createElementAndAppend(liOfFontFamilySelect, "select", {
-      name: "fontFamily",
-      id: "fontFamily",
-      value: "sans-serif"
+    let selectFont = createElementAndAppend({
+      parentElem: liOfFontFamilySelect,
+      elemType: "select",
+      attr: {
+        name: "fontFamily",
+        id: "fontFamily",
+        value: "sans-serif"
+      }
     })
 
     // list of fontFamily is decleared on constant.js
     FONT_FAMILY_LIST.forEach(font => {
-      createElementAndAppend(selectFont, "option", {
-        value: font.fontFamily,
-      }, font.value);
+      createElementAndAppend({
+        parentElem: selectFont,
+        elemType: "option",
+        attr: {
+          value: font.fontFamily,
+        },
+        innerText: font.value
+      });
     });
 
     selectFont.addEventListener("change", (e) => {
@@ -93,14 +153,22 @@ class Header {
     });
 
 
-    let liOfFontSize = createElementAndAppend(ul, "li", {
-      class: "font-size-input"
+    let liOfFontSize = createElementAndAppend({
+      parentElem: ul,
+      elemType: "li",
+      attr: {
+        class: "font-size-input"
+      }
     });
 
-    let fontSize = createElementAndAppend(liOfFontSize, "input", {
-      type: "number",
-      value: "16",
-      id: "fontSize"
+    let fontSize = createElementAndAppend({
+      parentElem: liOfFontSize,
+      elemType: "input",
+      attr: {
+        type: "number",
+        value: "16",
+        id: "fontSize"
+      }
     });
 
     fontSize.addEventListener("change", (e) => {
@@ -113,26 +181,42 @@ class Header {
 
     // -------------------Text align element container-----------------------
 
-    this.liOfTextAllign = createElementAndAppend(ul, "li", {
-      class: "text-align"
+    this.liOfTextAllign = createElementAndAppend({
+      parentElem: ul,
+      elemType: "li",
+      attr: {
+        class: "text-align"
+      }
     });
 
     //-----------------Text fromat element  container-------------------------
 
-    this.liOfTextFormat = createElementAndAppend(ul, "li", {
-      class: "text-format",
+    this.liOfTextFormat = createElementAndAppend({
+      parentElem: ul,
+      elemType: "li",
+      attr: {
+        class: "text-format",
+      }
     });
 
     //-----toolbarActionsProperty  is defined on util.js-----------------------
     toolbarActionsProperty.forEach(d => {
-      let tool = createElementAndAppend(this[d.parentElem], d.elem, d.attr);
+      let tool = createElementAndAppend({
+        parentElem: this[d.parentElem],
+        elemType: d.elem,
+        attr: d.attr
+      });
       tool.addEventListener("click", this.formatElement)
     });
 
-    let color = createElementAndAppend(this.liOfTextFormat, "input", {
-      type: "color",
-      name: "font-color",
-      value: "#000"
+    let color = createElementAndAppend({
+      parentElem: this.liOfTextFormat,
+      elemType: "input",
+      attr: {
+        type: "color",
+        name: "font-color",
+        value: "#000"
+      }
     });
 
     color.addEventListener("change", (e) => {
@@ -143,10 +227,14 @@ class Header {
       }
     });
 
-    let backgroundColor = createElementAndAppend(ul, "input", {
-      type: "color",
-      name: "font-color",
-      value: "#000"
+    let backgroundColor = createElementAndAppend({
+      parentElem: ul,
+      elemType: "input",
+      attr: {
+        type: "color",
+        name: "font-color",
+        value: "#000"
+      }
     });
 
     backgroundColor.addEventListener("change", (e) => {
@@ -158,19 +246,35 @@ class Header {
     });
 
     // TODO
-    let task1 = createElementAndAppend(ul, "button", {
-      class: "btn"
-    }, "Theme", );
-    let task2 = createElementAndAppend(ul, "li", null, "<a href='#'>Task 6</a>");
+    let task1 = createElementAndAppend({
+      parentElem: ul,
+      elemType: "button",
+      attr: {
+        class: "btn"
+      },
+      innerText: "Theme",
+    });
+
+    let task2 = createElementAndAppend({
+      parentElem: ul,
+      elemType: "li",
+      innerHTML: "<a href='#'>Task 6</a>"
+    });
 
     // play btn
-    let playBtn = createElementAndAppend(header, "button", {
-      class: "btn"
-    }, "<i class='fa fa-play'></i>&nbsp; Play", {
-      float: "right",
-      padding: "5px 20px",
-      width: "100px",
-      textAllign: "center"
+    let playBtn = createElementAndAppend({
+      parentElem: header,
+      elemType: "button",
+      attr: {
+        class: "btn"
+      },
+      innerHTML: "<i class='fa fa-play'></i>&nbsp; Play",
+      style: {
+        float: "right",
+        padding: "5px 20px",
+        width: "100px",
+        textAllign: "center"
+      }
     });
     playBtn.addEventListener("click", this.openFullscreen);
     return header;
@@ -178,7 +282,7 @@ class Header {
 
   /* Function to open fullscreen mode */
   openFullscreen(e) {
-    let elem = document.querySelector(".slide-wrapper #slide1");
+    let elem = document.querySelector(".slide-wrapper#slide-1");
 
     let allContentEditAble = elem.querySelectorAll("[contenteditable='true']");
     allContentEditAble.forEach(elem => {

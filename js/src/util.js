@@ -16,13 +16,20 @@ const addAttributes = (elem, attrs) => {
   }
 }
 
-const createElementAndAppend = (parentElem, elemType = "div", attr, innerText, style) => {
+const createElementAndAppend = ({
+  parentElem,
+  elemType = "div",
+  attr,
+  innerText,
+  innerHTML,
+  style
+}) => {
   let elem = document.createElement(elemType);
   style && styleElement(elem, style);
   attr && addAttributes(elem, attr);
 
-  if (innerText && innerText.includes("</")) {
-    elem.innerHTML = innerText;
+  if (innerHTML) {
+    elem.innerHTML = innerHTML;
   } else if (innerText) {
     elem.innerText = innerText;
   }
@@ -55,6 +62,7 @@ const dragAndDropElement = (element, parentElem) => {
       dragger.style.cursor = "grab";
       dragger.style.cursor = "-moz-grabb";
       dragger.style.cursor = "-webkit-grabb";
+
       parentElem.removeEventListener('mousemove', onMouseMove);
       dragger.onmouseup = null;
     };
@@ -86,7 +94,7 @@ const makeResizableDiv = (element) => {
   let original_mouse_x = 0;
   let original_mouse_y = 0;
 
-  resizer.addEventListener('mousedown', function (e) {
+  resizer && resizer.addEventListener('mousedown', function (e) {
     e.preventDefault();
     original_width = element.getBoundingClientRect().width;
     original_height = element.getBoundingClientRect().height;
@@ -200,3 +208,12 @@ const camalize = (str) => {
     return chr.toUpperCase();
   });
 }
+
+// Global events
+
+window.addEventListener("keydown", e => {
+  if (e.key === "Delete") {
+    let activeElem = document.querySelector("[datatoolbaractive = 'true']").parentElement;
+    activeElem.parentNode.removeChild(activeElem);
+  }
+}, false)

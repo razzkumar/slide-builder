@@ -38,5 +38,6 @@ const FONT_FAMILY_LIST = [{
   }
 ];
 const COMMENT_CONTAINER_HEIGHT = 70;
+const TITLE_CONTAINER_MIN_HEIGHT = 80;
 
 const ELEM_RE_SIZE_BTN = ["top-left", "top-right", "bottom-left", "bottom-right", ]

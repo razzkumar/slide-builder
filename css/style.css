@@ -112,12 +112,17 @@
 .slide-wrapper {
   border: 1px solid gray;
   padding: 10px;
+  display: none;
+}
+
+.slide-wrapper.activeSlide {
+  display: block;
 }
 
 .main-content {
   padding: 10px;
-  /* border: 1px solid red; */
   position: relative;
+  box-sizing: border-box;
 }
 
 div[contenteditable=true]:empty:before {
@@ -147,9 +152,10 @@ div[contenteditable="true"]:hover {
   bottom: -4px;
   cursor: nwse-resize;
   width: 10px;
+  display: none;
   height: 10px;
   background-color: "#fff";
-  border: 2px solid #4286f4;
+  border: 2px solid #AAA;
   border-radius: 50%;
 }
 
@@ -159,6 +165,36 @@ div[contenteditable="true"]:hover {
   top: 0;
   height: 5px;
   cursor: grab;
+}
+
+
+.elem-rotator {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px solid #AAA;
+  transform: translateX(-50%);
+  height: 8px;
+  width: 8px;
+  cursor: url("../img/rotate.ico");
+  display: none;
+}
+
+.elem-rotator::after {
+  content: "";
+  width: 1px;
+  height: 10px;
+  background-color: #AAA;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.fullscreen {
+  padding: 30px;
 }
 
 /* Full screen style */
