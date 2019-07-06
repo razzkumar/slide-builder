@@ -1,3 +1,11 @@
+/**
+ * A function to style a HTML element 
+ * key of object must be valid css property in js representation (eg.background-color to backgroundColor:"red")
+ * @param  {HTML element} elem HTML element in which style are applied
+ * @param  {Style Object} style Object of styles that applied to HTML element
+ * @example
+ * styleElement(heading,{backgroundColor:"#AAA"})
+ */
 const styleElement = (elem, style) => {
   let styleKey = style && Object.keys(style);
   if (styleKey && styleKey.length) {
@@ -7,6 +15,14 @@ const styleElement = (elem, style) => {
   }
 }
 
+
+/**
+ * A function to append attributes on the  HTML element
+ * @param  {HTML element} elem  HTML element in which attributes are applied
+ * @param  {HTML Attributes} attrs Object of attributes that applied HTML  element
+ * @example
+ * addAttributes(heading,{class:"heading-container"})
+ */
 const addAttributes = (elem, attrs) => {
   let attrKeys = attrs && Object.keys(attrs);
   if (attrKeys && attrKeys.length) {
@@ -16,6 +32,16 @@ const addAttributes = (elem, attrs) => {
   }
 }
 
+/**
+ * A function to create HTML element and apply style as well as add the attributes
+ * 
+ * @param  {HTML element} {parentElem  HTML element in which new HTML element is appended
+ * @param  {Valid HTML Tag} elemType [n="div"] Type of element to create
+ * @param  {Attributes} attr attributes of the element 
+ * @param  {String} innerText [n] Content of element  
+ * @param  {HTML} innerHTML [n] Content of element
+ * @param  {Style Object} style} Style of the element is to be added with valid css property
+ */
 const createElementAndAppend = ({
   parentElem,
   elemType = "div",
@@ -37,17 +63,28 @@ const createElementAndAppend = ({
   parentElem.appendChild(elem);
   return elem;
 }
+/**
+ * A function that helps to drag and drop  element 
+ * @param  {HTML element} element element in which drag event should fired
+ * @example
+ * dragAndDropElement(slide1Element1);
+ */
+const dragAndDropElement = (element) => {
 
-const dragAndDropElement = (element, parentElem) => {
+  let parentX = 0;
+  let parentY = 0;
 
-  let parentX = parentElem.getBoundingClientRect().left;
-  let parentY = parentElem.getBoundingClientRect().top;
   let shiftX = 0;
   let shiftY = 0;
 
   let dragger = element.querySelector(".dragger");
 
   dragger.addEventListener("mousedown", (event) => {
+
+    parentX = element.parentElement.getBoundingClientRect().left;
+    parentY = element.parentElement.getBoundingClientRect().top;
+
+
     event.preventDefault();
 
     shiftX = event.clientX - element.getBoundingClientRect().left;
@@ -56,14 +93,14 @@ const dragAndDropElement = (element, parentElem) => {
     moveAt(event.clientX, event.clientY);
 
     // move the element on mousemove
-    parentElem.addEventListener('mousemove', onMouseMove);
+    element.parentElement.addEventListener('mousemove', onMouseMove);
     // drop the element, remove unneeded handlers
     dragger.onmouseup = function () {
       dragger.style.cursor = "grab";
       dragger.style.cursor = "-moz-grabb";
       dragger.style.cursor = "-webkit-grabb";
 
-      parentElem.removeEventListener('mousemove', onMouseMove);
+      element.parentElement.removeEventListener('mousemove', onMouseMove);
       dragger.onmouseup = null;
     };
 
@@ -84,9 +121,12 @@ const dragAndDropElement = (element, parentElem) => {
   //preventing default drag and drop
   dragger.addEventListener("dragstart", () => false);
 }
-
+/**
+ * A function to resize any HTML element of the slide content
+ *
+ * @param  {HTML element} element HTML element which is to be resized
+ */
 const makeResizableDiv = (element) => {
-  // const element = document.querySelector(div);
   const resizer = element.querySelector('.resizer');
 
   let original_width = 0;
@@ -105,8 +145,10 @@ const makeResizableDiv = (element) => {
   })
 
   function resize(e) {
+
     const width = original_width + (e.pageX - original_mouse_x);
     const height = original_height + (e.pageY - original_mouse_y);
+
     element.style.width = width + 'px'
     element.style.height = height + 'px'
   }
@@ -186,7 +228,13 @@ const toolbarActionsProperty = [{
     }
   }
 ]
-
+/**
+ * A funtion that takes inline style and convert to js Object style
+ * @param  {Object} style style of element (eg. slide1.style)
+ * @returns Object that contains js formated style of element
+ * @example
+ * formatStyleToStore(slide1.style);
+ */
 const formatStyleToStore = (style) => {
   let styleSheet = {}
   let i = 0;
@@ -203,17 +251,39 @@ const formatStyleToStore = (style) => {
   return styleSheet;
 }
 
+/** A function to make camel case to any string
+ * @param  {String} str String to be camalize
+ * @returns {String} camal case string
+ */
 const camalize = (str) => {
-  return str.replace(/-+(.)/g, function (match, chr) {
+  return str.replace(/[-,\W]+(.)/g, function (match, chr) {
     return chr.toUpperCase();
   });
 }
 
-// Global events
 
+// Global events
 window.addEventListener("keydown", e => {
   if (e.key === "Delete") {
     let activeElem = document.querySelector("[datatoolbaractive = 'true']").parentElement;
     activeElem.parentNode.removeChild(activeElem);
   }
-}, false)
+}, false);
+
+
+/**
+ * A function that helps to  export All Collected/prepated data  
+ * @param  {Object} jsonData Data is to be exported
+ * @param  {String} fileName [n="data.json"] name of the download file 
+ */
+const exportToJsonFile = (jsonData, fileName) => {
+  let dataStr = JSON.stringify(jsonData);
+  let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+  let exportFileDefaultName = fileName || 'data.json';
+
+  let linkElement = document.createElement('a');
+  linkElement.setAttribute('href', dataUri);
+  linkElement.setAttribute('download', exportFileDefaultName);
+  linkElement.click();
+}

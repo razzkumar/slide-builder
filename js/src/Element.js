@@ -1,59 +1,107 @@
-class SlideElement {
+/**
+ * Class Representing Single Element of a slide
+ */
+class Element {
+  /**
+   * Create a Element
+   * 
+   * @param  {String} {[elemType="div"] type of element (eg. div)
+   * @param  {number} slideIndex index of the slide 
+   * @param  {Object} slideData all the data of the slide
+   * @param  {String} parentElem  Parent Element in which new element is appened
+   * @param  {String} innerHTML  content of the element
+   * @param  {String} innerText  content of the element
+   * @param  {String | Number} elemId  Id of the element 
+   * @param  {Object} attr all the attributes of the element
+   * @param  {Object} style default style of the element that will be applied inline on element
+   * @param  {Boolean} [createNewElement]} create new element or import element
+   */
 
-  constructor(params) {
+  constructor({
+    elemType,
+    slideIndex,
+    slideData,
+    parentElem,
+    innerHTML,
+    innerText,
+    elemId,
+    attr,
+    style,
+    createNewElement
+  }) {
 
-    this.parentElem = params.parentElem;
-    this.slideIndex = params.slideIndex;
-    this.elemId = params.elemId;
-    this.slideData = params.slideData;
+    this.parentElem = parentElem;
+    this.slideIndex = slideIndex;
+    this.elemId = elemId;
+    this.slideData = slideData;
 
-    this.slideData[params.slideIndex - 1][`elem${params.elemId}`]["elemId"] = params.elemId;
-    this.slideData[params.slideIndex - 1][`elem${params.elemId}`]["slideIndex"] = params.slideIndex;
-    if (params.attr) {
-      this.slideData[params.slideIndex - 1][`elem${params.elemId}`]["attr"] = params.attr;
+    this.slideData[slideIndex - 1][`elem${elemId}`]["elemId"] = elemId;
+
+    this.slideData[slideIndex - 1][`elem${elemId}`]["slideIndex"] = slideIndex;
+
+    if (attr) {
+      this.slideData[slideIndex - 1][`elem${elemId}`]["attr"] = attr;
     }
 
-    if (params.elemId === "Title") {
-      this.element = createElementAndAppend(params);
-    } else if (params.elemId === "UserNote") {
+    if (elemId === "Title") {
+      this.element = createElementAndAppend({
+        parentElem,
+        innerHTML,
+        innerText,
+        attr,
+        style,
+      });
+    } else if (elemId === "UserNote") {
 
       this.element = createElementAndAppend({
-        ...params,
+        parentElem,
+        attr,
+        style,
+        innerHTML,
         innerText: "NOTE :"
       });
 
     } else {
 
-      let upperElement = document.querySelector(`#slide${params.slideIndex}Element${params.elemId-1}Container`);
+      let upperElement = document.querySelector(`#slide${slideIndex}Element${elemId-1}Container`);
 
-      let top = upperElement ? upperElement.offsetTop + upperElement.offsetHeight + GAP_BETWEEN_ELEMENT / 2 : GAP_BETWEEN_ELEMENT / 2;
+      let top = upperElement ? parseInt(upperElement.style.height) * (elemId - 1) + (GAP_BETWEEN_ELEMENT / 2) * (elemId) : GAP_BETWEEN_ELEMENT / 2;
+
       this.resizableContainer = createElementAndAppend({
         parentElem: this.parentElem,
         attr: {
-          id: `slide${params.slideIndex}Element${params.elemId}Container`,
+          id: `slide${slideIndex}Element${elemId}Container`,
         },
         style: {
-          ...params.style,
-          top: params.createNewElement ? `${top}px` : params.style.top
+          ...style,
+          top: createNewElement ? `${top}px` : style.top
         }
       });
 
 
       this.element = createElementAndAppend({
+        innerHTML,
         parentElem: this.resizableContainer,
-        elemType: params.elemType,
+        elemType,
         attr: {
           contenteditable: true,
-          id: `slide${params.slideIndex}Element${params.elemId}`,
+          id: `slide${slideIndex}Element${elemId}`,
           placeholder: "Please start writing..."
         }
       });
     }
   }
 
-  setup() {
+
+  /**
+   * A function to initilize the slide Element 
+   * @returns Element Object
+   */
+  init() {
 
     if (this.resizableContainer) {
+
+      // element resizer
 
       this.resizer = createElementAndAppend({
         parentElem: this.resizableContainer,
@@ -62,6 +110,7 @@ class SlideElement {
         }
       });
 
+      // drag and drop grabber
       createElementAndAppend({
         parentElem: this.resizableContainer,
         attr: {
@@ -76,9 +125,10 @@ class SlideElement {
         }
       });
 
+
       // Drag and drop only to the content not title and comment section
 
-      dragAndDropElement(this.resizableContainer, this.parentElem);
+      dragAndDropElement(this.resizableContainer);
 
       // make resizeable
       makeResizableDiv(this.resizableContainer);
@@ -98,7 +148,6 @@ class SlideElement {
       if (previousActiveResizer || previousActiveRotator) {
         previousActiveRotator.style.display = "none";
         previousActiveResizer.style.display = "none";
-
       }
 
       if (this.resizer || this.rotator) {
@@ -135,22 +184,36 @@ class SlideElement {
       e.target.setAttribute("dataToolbarActive", "true");
 
       // updating style of the element on this.slideData
+
+
+      let currentStyle = formatStyleToStore(e.target.style);
       let parentElemEId = e.target.parentElement.getAttribute("id");
+
       if (parentElemEId && parentElemEId.includes("Container")) {
+
         let style = formatStyleToStore(e.target.parentElement.style);
+        style = {
+          ...style,
+          ...currentStyle
+        };
+
         if (JSON.stringify(style) !== JSON.stringify(this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style)) {
           this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = style;
         }
+      } else if (JSON.stringify(currentStyle) !== JSON.stringify(this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style)) {
+        this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = currentStyle;
       }
     });
 
 
+    //Watch the change on slide's element's content and collectd the data
     this.element.addEventListener("input", (e) => {
       let elemOnList = document.querySelector(`.slide-list #slide${this.slideIndex}Element${this.elemId}`);
       if (elemOnList) {
         elemOnList.innerHTML = this.element.innerHTML;
       }
       this.slideData[this.slideIndex - 1][`elem${this.elemId}`]["innerHTML"] = this.element.innerHTML;
+      // console.log('this.slideDat:', this.slideData)
     }, true);
 
     return this.element;

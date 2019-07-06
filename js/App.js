@@ -1,51 +1,103 @@
-// All style (__Style let) are stored on style.js
-
+/**
+ * Class which is Entry point of the application 
+ * @example 
+ * new App({containerId:"app"}).init();
+ */
 class App {
-  constructor(data) {
-    this.id = data.id;
+
+  /**
+   * 
+   * @param {String} containerId Id of the container whare app is created 
+   */
+  constructor({
+    containerId
+  }) {
+    this.id = containerId;
     this.container = document.querySelector(`#${this.id}`);
     this.slides = [];
     this.slideIndex = 1;
     this.slideData = [];
     this.isFullScreen = false;
+
   }
+  /**
+   * Initilize the application
+   */
+  init() {
 
-  setup() {
-    this.header = new Header(this.container).setup();
-    let headerHeight = this.header.offsetHeight;
-
-    let slideContainerStyle = {
-      height: `${window.innerHeight-headerHeight-20}px`
-    };
-
-    let slideContainer = createElementAndAppend({
+    this.header = new Header(this.container).init();
+    let headerHeight = this.header.headerContainer.offsetHeight;
+    this.slideContainer = createElementAndAppend({
       parentElem: this.container,
       attr: {
         class: "container clearfix",
       },
-      style: slideContainerStyle
+      style: {
+        height: `${window.innerHeight-headerHeight-20}px`
+      }
     });
 
-    let slideList = createElementAndAppend({
-      parentElem: slideContainer,
+    this.slideList = createElementAndAppend({
+      parentElem: this.slideContainer,
       attr: {
         class: "slide-list",
       }
     });
 
-    this.slideData[this.slideIndex - 1] = {};
 
-    let firstSlide = new Slide({
-      container: slideContainer,
+    // Create new slide on click 
+    this.header.createNewSlideBtn.addEventListener("click", (e) => {
+      this.makeNewSlide();
+    });
+
+    //Create new elenet on click
+    this.header.insertElement.addEventListener("click", (e) => {
+      this.makeNewElement();
+    })
+
+    // Loading exported data
+    DATA.map(data => {
+      this.makeNewSlide(data);
+    });
+
+
+    this.makeNewSlide();
+  }
+
+
+  /**
+   * A funtion to create new slide if "data" is passed exiting slide will be created 
+   * otherwise it create the empty slide
+   * @param  {Object} [data] Imported data
+   * 
+   */
+  makeNewSlide(data) {
+    this.slideData[this.slideIndex - 1] = {};
+    this.newSlide = new Slide({
+      container: this.slideContainer,
       toolbar: this.header,
       slideIndex: this.slideIndex,
-      slideData: this.slideData
-    }).setup();
+      slideData: this.slideData,
+      exportedData: data
+    }).init();
 
-    // Cloning slideBody for list
+    this.slideIndex++;
+    this.slides.push(this.newSlide);
 
-    let slideBody = firstSlide.slideBody.cloneNode(true);
+    // Create list that appear on left side after creating new slide
+    this.makeSlideList();
 
+  }
+
+
+  /**
+   * A function which clone the slide body and make a list to show in left side
+   */
+  makeSlideList() {
+
+    // Cloning thumbnailSlideBody for list
+
+    let thumbnailSlideBody = this.newSlide.slideBody.cloneNode(true);
     let activeSlide = document.querySelector(".activeSlide");
 
     let thumbnailStyle = {
@@ -53,86 +105,92 @@ class App {
       height: window.getComputedStyle(activeSlide).height,
       transformOrigin: "top left",
       left: "50%",
+      top: "50%",
       display: "block",
-      transform: "scale(0.22) translateX(-50%)"
+      transform: "scale(0.17) translate(-50%,-50%)"
     }
 
-    styleElement(slideBody, thumbnailStyle);
+    styleElement(thumbnailSlideBody, thumbnailStyle);
 
     let thumbnail = createElementAndAppend({
-      parentElem: slideList,
-      style: {
-        height: "20vh",
+      parentElem: this.slideList,
+      attr: {
+        class: 'thumbnail'
       }
     });
 
-    let thumbnail2 = createElementAndAppend({
-      parentElem: slideList,
-      style: {
-        height: "20vh"
-      }
-    });
+    let activeThumb = document.querySelector(".thumbnail.active");
+    activeThumb && activeThumb.classList.remove("active");
+    thumbnail.classList.add("active");
 
-    thumbnail.appendChild(slideBody);
+    activeSlide && activeSlide.classList.remove("activeSlide");
+    document.querySelector(`#slide-${this.slideIndex-1}`).classList.add("activeSlide");
+
+
+    // Adding click event to change slide 
+    thumbnailSlideBody.addEventListener("click", (e) => {
+
+      let id = e.currentTarget.getAttribute("dataslideindex");
+
+      activeThumb = document.querySelector(".thumbnail.active");
+
+      activeThumb && activeThumb.classList.remove("active");
+      thumbnail.classList.add("active");
+
+      activeSlide = document.querySelector(".activeSlide");
+      activeSlide.classList.remove("activeSlide");
+      document.querySelector(`#slide-${id}`).classList.add("activeSlide");
+
+    })
+
+    thumbnail.appendChild(thumbnailSlideBody);
 
     // removing contenteditable attribute on slide list
-
-    let allContentEditAble = slideBody.querySelectorAll("[contenteditable='true']");
+    let allContentEditAble = thumbnailSlideBody.querySelectorAll("[contenteditable='true']");
     allContentEditAble.forEach(elem => {
       elem.removeAttribute("contenteditable");
-    })
-
-    this.slideIndex++;
-    this.slides.push(firstSlide);
-
-    // second slide 
-
-    this.slideData[this.slideIndex - 1] = {};
-
-    let secondSlide = new Slide({
-      container: slideContainer,
-      toolbar: this.header,
-      slideIndex: this.slideIndex,
-      slideData: this.slideData
-    }).setup();
-
-    // Cloning slideBody for list
-    let secondSlideBody = secondSlide.slideBody.cloneNode(true);
-
-    styleElement(secondSlideBody, thumbnailStyle);
-
-    thumbnail2.appendChild(secondSlideBody);
-
-    // removing contenteditable attribute on slide list
-
-    let allContentEditAbleof2 = secondSlideBody.querySelectorAll("[contenteditable='true']");
-    allContentEditAbleof2.forEach(elem => {
-      elem.removeAttribute("contenteditable");
-    })
-
-    this.slideIndex++;
-    this.slides.push(secondSlide);
-
-    document.addEventListener('fullscreenchange', () => {
-      let elem = document.querySelector(".slide-wrapper #slide-1");
-
-      if (this.isFullScreen) {
-        elem.classList.remove("fullscreen");
-        this.isFullScreen = false;
-        let allContentEditAble = elem.querySelectorAll("[contenteditable='false']");
-        allContentEditAble.forEach(elem => {
-          elem.setAttribute("contenteditable", "true");
-        })
-
-      } else {
-        elem.classList.add("fullscreen");
-        this.isFullScreen = true;
-      }
     });
   }
+
+
+  /**
+   * A function which handle the creatation of new element on the active slide on click 
+   * @param  {String} [elemType] Type of element  
+   */
+  makeNewElement(elemType) {
+
+    let activeSlide = document.querySelector(".activeSlide");
+
+    let slideIndex = activeSlide.querySelector(".slide-body").getAttribute("dataslideindex");
+
+    let slideWrapper = activeSlide.querySelector(".main-content");
+
+    let elemId = slideWrapper.children.length + 1;
+
+    this.slideData[slideIndex - 1][`elem${elemId}`] = {};
+
+    new Element({
+      elemType,
+      slideIndex,
+      slideData: this.slideData,
+      parentElem: slideWrapper,
+      elemId,
+      createNewElement: true,
+      style: {
+        position: "absolute",
+        top: `${GAP_BETWEEN_ELEMENT/2}px`,
+        minHeight: "30px",
+        height: DEFAULT_ELEMENT_HEIGHT + "px",
+        width: "95%",
+        fontSize: document.querySelector("#fontSize").value
+      }
+    }).init();
+
+  }
+
 }
 
 
 new App({
-  id: "app"
-}).setup();;
+  containerId: "app"
+}).init();

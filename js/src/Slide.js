@@ -9,7 +9,7 @@ class Slide {
     this.elementCount = 1;
   }
 
-  setup() {
+  init() {
 
     let slideWrapper = createElementAndAppend({
       parentElem: this.container,
@@ -18,6 +18,7 @@ class Slide {
         id: `slide-${this.slideIndex}`
       }
     });
+
     this.slideBody = createElementAndAppend({
       parentElem: slideWrapper,
       attr: {
@@ -26,87 +27,132 @@ class Slide {
       }
     });
 
-    // UserNote
-    this.slideData[this.slideIndex - 1][`elemUserNote`] = {};
-    new SlideElement({
-      elemType: "div",
-      slideIndex: this.slideIndex,
-      slideData: this.slideData,
-      parentElem: slideWrapper,
-      innerHTML: "",
-      elemId: "UserNote",
-      attr: {
-        class: 'user-note',
-        title: 'Note of the Slide',
-        id: `slide${this.slideIndex}ElementUserNote`,
-        contenteditable: true,
-      },
-      style: {
-        height: COMMENT_CONTAINER_HEIGHT + "px"
-      },
-    }).setup();
-
-    // Slide title
-    this.slideData[this.slideIndex - 1][`elemTitle`] = {};
-
-    let slideTitle = new SlideElement({
-      parentElem: this.slideBody,
-      slideIndex: this.slideIndex,
-      elemId: "Title",
-      attr: {
-        class: 'title',
-        title: 'Title of the Slide',
-        contenteditable: true,
-        id: `slide${this.slideIndex}ElementTitle`,
-        placeholder: "Enter Title here..."
-      },
-      style: {
-        fontSize: "48px",
-        minHeight: TITLE_CONTAINER_MIN_HEIGHT + "px",
-        padding: "10px"
-      },
-      slideData: this.slideData,
-    }).setup();
-
-
     let contentWrapperHeight = this.container.offsetHeight - TITLE_CONTAINER_MIN_HEIGHT - COMMENT_CONTAINER_HEIGHT - 22; // 10+10 top and down margin
 
-    let slideContentWrapper = createElementAndAppend({
-      parentElem: this.slideBody,
-      attr: {
-        class: "main-content"
-      },
-      style: {
-        height: contentWrapperHeight + "px"
+    if (this.exportedData) {
+
+      if (this.exportedData.elemTitle) {
+        this.slideData[this.exportedData.elemTitle.slideIndex - 1][`elemTitle`] = {};
+        this.createElement({
+          slideData: this.slideData,
+          parentElem: this.slideBody,
+          ...this.exportedData.elemTitle
+        })
       }
-    });
-    let activeSlide = document.querySelector(".activeSlide");
-    let commonParameters = {
-      parentElem: slideContentWrapper,
-      elemId: this.elementCount,
-      slideIndex: this.slideIndex,
-      slideData: this.slideData,
-      createNewElement: true,
-      style: {
-        position: "absolute",
-        top: `${GAP_BETWEEN_ELEMENT/2}px`,
-        minHeight: "30px",
-        height: activeSlide.clientHeight / 3 + "px",
-        width: activeSlide.clientWidth - GAP_BETWEEN_ELEMENT * 2 + "px",
-        maxWidth: activeSlide.clientWidth - GAP_BETWEEN_ELEMENT + "px",
-        fontSize: document.querySelector("#fontSize").value
+
+      if (this.exportedData.elemUserNote) {
+        this.slideData[this.exportedData.elemUserNote.slideIndex - 1][`elemUserNote`] = {};
+        this.createElement({
+          slideData: this.slideData,
+          parentElem: slideWrapper,
+          ...this.exportedData.elemUserNote
+        })
       }
-    };
+
+      this.slideContentWrapper = createElementAndAppend({
+        parentElem: this.slideBody,
+        attr: {
+          class: "main-content"
+        },
+        style: {
+          height: contentWrapperHeight + "px"
+        }
+      });
+
+      let elemCount = 1;
+
+      while (this.exportedData[`elem${elemCount}`] && this.exportedData[`elem${elemCount}`].elemId) {
+
+        this.createElement({
+          parentElem: this.slideContentWrapper,
+          slideData: this.slideData,
+          ...this.exportedData[`elem${elemCount}`]
+        });
+
+        this.slideData[this.exportedData.elemUserNote.slideIndex - 1][`elem${elemCount}`] = {};
+        elemCount++;
+      }
+
+    } else {
+      // UserNote
+      this.slideData[this.slideIndex - 1][`elemUserNote`] = {};
+      new Element({
+        elemType: "div",
+        slideIndex: this.slideIndex,
+        slideData: this.slideData,
+        parentElem: slideWrapper,
+        innerHTML: "",
+        elemId: "UserNote",
+        attr: {
+          class: 'user-note',
+          title: 'Note of the Slide',
+          id: `slide${this.slideIndex}ElementUserNote`,
+          contenteditable: true,
+        },
+        style: {
+          height: COMMENT_CONTAINER_HEIGHT + "px"
+        },
+      }).init();
+
+      // Slide title
+      this.slideData[this.slideIndex - 1][`elemTitle`] = {};
+      new Element({
+        parentElem: this.slideBody,
+        slideIndex: this.slideIndex,
+        innerHTML: `Slide ${this.slideIndex} Title`,
+        elemId: "Title",
+        attr: {
+          class: 'title',
+          title: 'Title of the Slide',
+          contenteditable: true,
+          id: `slide${this.slideIndex}ElementTitle`,
+          placeholder: "Enter Title here..."
+        },
+        style: {
+          fontSize: "48px",
+          minHeight: TITLE_CONTAINER_MIN_HEIGHT + "px",
+          padding: "10px"
+        },
+        slideData: this.slideData,
+      }).init();
+
+      this.slideContentWrapper = createElementAndAppend({
+        parentElem: this.slideBody,
+        attr: {
+          class: "main-content"
+        },
+        style: {
+          height: contentWrapperHeight + "px"
+        }
+      });
+
+      this.createElement({
+        parentElem: this.slideContentWrapper,
+        elemId: this.elementCount,
+        slideIndex: this.slideIndex,
+        slideData: this.slideData,
+        createNewElement: true,
+        style: {
+          position: "absolute",
+          top: `${GAP_BETWEEN_ELEMENT/2}px`,
+          minHeight: "30px",
+          height: DEFAULT_ELEMENT_HEIGHT + "px",
+          width: "95%",
+          maxWidth: "100%",
+          fontSize: document.querySelector("#fontSize").value
+        }
+      });
+    }
+    return this;
+  }
+
+  createElement(commonParameters) {
 
 
     this.slideData[this.slideIndex - 1][`elem${this.elementCount}`] = {};
 
-    let defaultElement = new SlideElement({
-      ...commonParameters,
-      elemId: this.elementCount
-    }).setup();
+    new Element(commonParameters).init();
     this.elementCount++;
 
-    return this;
   }
 }

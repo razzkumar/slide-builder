@@ -1,21 +1,32 @@
+/**
+ * Class that create the Header section of the Application
+ * @example
+ * new Header(parentElem).init()
+ */
 class Header {
-
+  /**
+   * Get the Header container element to append the header
+   * @param  {HTML Element} container HTML element in which header will be appended
+   */
   constructor(container) {
     this.container = container;
   }
-
-  setup() {
+  /**
+   * A function which initilize the Header
+   */
+  init() {
 
     // -------------Creating header container--------
-    let header = document.createElement("div");
-    header.classList.add("header", "container", "clearfix");
+    this.headerContainer = document.createElement("div");
+
+    this.headerContainer.classList.add("header", "container", "clearfix");
 
 
-    // Appending Header on root
-    this.container.appendChild(header);
+    // Appending this.headerContainer on root
+    this.container.appendChild(this.headerContainer);
 
     let brandContaner = createElementAndAppend({
-      parentElem: header,
+      parentElem: this.headerContainer,
       elemType: "div",
       attr: {
         class: "brand"
@@ -25,7 +36,7 @@ class Header {
     // ul of toolbar
 
     let ul = createElementAndAppend({
-      parentElem: header,
+      parentElem: this.headerContainer,
       elemType: "ul"
     });
 
@@ -47,7 +58,7 @@ class Header {
       innerText: "File"
     });
 
-    fileHandle.addEventListener("click", this.handleClick);
+    fileHandle.addEventListener("click", this.handleDropdownMenu);
 
     let fileDropDownlist = createElementAndAppend({
       parentElem: liOfFileHandler,
@@ -57,21 +68,21 @@ class Header {
       }
     });
 
-    let newSlide = createElementAndAppend({
+    this.createNewSlideBtn = createElementAndAppend({
       parentElem: fileDropDownlist,
       elemType: "span",
       innerText: "New Slide"
     });
-    let importSlides = createElementAndAppend({
+    this.importSlides = createElementAndAppend({
       parentElem: fileDropDownlist,
       elemType: "div",
-      innerHTML: '<i class="fa fa-file-import"></i> <span>Import</span>'
+      innerHTML: '<i class="fa fa-download"></i> <span>Import</span>'
     });
-    let exportSlides = createElementAndAppend({
+    this.exportSlides = createElementAndAppend({
       parentElem: fileDropDownlist,
       elemType: "div",
       attr: null,
-      innerHTML: '<i class="fa fa-file-export"></i> <span>Export</span>'
+      innerHTML: '<i class="fa fa-upload"></i> <span>Export</span>'
     });
 
 
@@ -93,7 +104,7 @@ class Header {
       innerText: "Insert"
     });
 
-    InsertHandle.addEventListener("click", this.handleClick);
+    InsertHandle.addEventListener("click", this.handleDropdownMenu);
     let insertDropDownlist = createElementAndAppend({
       parentElem: liOfExportHandler,
       elemType: "div",
@@ -102,15 +113,20 @@ class Header {
       }
     });
 
-    let insertImage = createElementAndAppend({
+    this.insertElement = createElementAndAppend({
+      parentElem: insertDropDownlist,
+      innerHTML: '<i class="fa fa-text-width"></i> <span>New Text</span>'
+    });
+
+    this.insertImage = createElementAndAppend({
       parentElem: insertDropDownlist,
       elemType: "div",
       innerHTML: '<i class="fa fa-image"></i> <span>Image</span>'
     });
-    let insertVideo = createElementAndAppend({
+    this.insertVideo = createElementAndAppend({
       parentElem: insertDropDownlist,
       elemType: "div",
-      innerHTML: '<i class="fa fa-video"></i> <span>Video</span>'
+      innerHTML: '<i class="fa fa-video-camera"></i> <span>Video</span>'
     });
 
     // adding fontFamily selection
@@ -141,6 +157,9 @@ class Header {
         attr: {
           value: font.fontFamily,
         },
+        style: {
+          fontFamily: font.fontFamily
+        },
         innerText: font.value
       });
     });
@@ -149,6 +168,7 @@ class Header {
       let lastFcused = document.querySelector("[dataToolbarActive='true']");
       if (lastFcused) {
         lastFcused.style.fontFamily = e.target.value;
+        lastFcused.focus();
       };
     });
 
@@ -175,7 +195,8 @@ class Header {
       let lastFcused = document.querySelector("[dataToolbarActive='true']");
       if (lastFcused) {
         lastFcused.style.fontSize = e.target.value + "px";
-      };
+        lastFcused.focus();
+      }
     });
 
 
@@ -223,7 +244,7 @@ class Header {
       let lastFcused = document.querySelector("[dataToolbarActive='true']");
       if (lastFcused) {
         lastFcused.style.color = e.target.value;
-        lastFcused && lastFcused.focus();
+        lastFcused.focus();
       }
     });
 
@@ -241,12 +262,12 @@ class Header {
       let lastFcused = document.querySelector("[dataToolbarActive='true']");
       if (lastFcused) {
         lastFcused.style.backgroundColor = e.target.value;
-        lastFcused && lastFcused.focus();
+        lastFcused.focus();
       }
     });
 
     // TODO
-    let task1 = createElementAndAppend({
+    let theme = createElementAndAppend({
       parentElem: ul,
       elemType: "button",
       attr: {
@@ -255,15 +276,9 @@ class Header {
       innerText: "Theme",
     });
 
-    let task2 = createElementAndAppend({
-      parentElem: ul,
-      elemType: "li",
-      innerHTML: "<a href='#'>Task 6</a>"
-    });
-
     // play btn
     let playBtn = createElementAndAppend({
-      parentElem: header,
+      parentElem: this.headerContainer,
       elemType: "button",
       attr: {
         class: "btn"
@@ -277,16 +292,19 @@ class Header {
       }
     });
     playBtn.addEventListener("click", this.openFullscreen);
-    return header;
+
+    return this;
   }
 
   /* Function to open fullscreen mode */
   openFullscreen(e) {
+
     let elem = document.querySelector(".slide-wrapper#slide-1");
 
     let allContentEditAble = elem.querySelectorAll("[contenteditable='true']");
     allContentEditAble.forEach(elem => {
       elem.setAttribute("contenteditable", "false");
+
     })
 
     if (elem.requestFullscreen) {
@@ -302,6 +320,12 @@ class Header {
       elem.msRequestFullscreen();
     }
   }
+
+
+  /**
+   * A function that handle toolbar related to text alignment and font (i.e text-align,font-size)
+   * @param  {Event} e HTML element in which event is triggers 
+   */
   formatElement(e) {
     let cmd = e.target.getAttribute("dataCmd");
     let cssProperty = e.target.getAttribute("cssProperty");
@@ -352,7 +376,18 @@ class Header {
     }
   }
 
-  handleClick(e) {
+
+  /**
+   * A function that handle drop down 
+   * @param  {Event} e click event
+   */
+  handleDropdownMenu(e) {
+
+    let activeDropdown = document.querySelector(".show");
+    //check wether same btn clicked or not
+    if (activeDropdown !== e.target.nextSibling) {
+      activeDropdown && activeDropdown.classList.remove("show");
+    }
     e.target.nextSibling.classList.toggle("show");
   }
 }
