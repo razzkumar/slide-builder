@@ -41,8 +41,9 @@ class Element {
 
     if (attr) {
       this.slideData[slideIndex - 1][`elem${elemId}`]["attr"] = attr;
+    } else if (elemType) {
+      this.slideData[slideIndex - 1][`elem${elemId}`]["elemType"] = elemType;
     }
-
     if (elemId === "Title") {
       this.element = createElementAndAppend({
         parentElem,
@@ -67,6 +68,13 @@ class Element {
 
       let top = upperElement ? parseInt(upperElement.style.height) * (elemId - 1) + (GAP_BETWEEN_ELEMENT / 2) * (elemId) : GAP_BETWEEN_ELEMENT / 2;
 
+      // placing element in random place after place is occupied
+      if ((top + parseInt(style.height)) >= parseInt(this.parentElem.style.height)) {
+        top = randomNumber(DEFAULT_ELEMENT_HEIGHT, parseInt(this.parentElem.style.height) - style.height);
+        style.backgroundColor = "#aef";
+        style.width = randomNumber(50, 90) + "%";
+      }
+
       this.resizableContainer = createElementAndAppend({
         parentElem: this.parentElem,
         attr: {
@@ -78,16 +86,26 @@ class Element {
         }
       });
 
+      attr = elemType === "img" ? {
+        src: "../../img/jungle.jpg",
+        id: `slide${slideIndex}Element${elemId}`,
+        contenteditable: true,
+        alt: `slide ${slideIndex} Element ${elemId} image `
+      } : {
+        contenteditable: true,
+        id: `slide${slideIndex}Element${elemId}`,
+        placeholder: "Please start writing..."
+      }
 
       this.element = createElementAndAppend({
         innerHTML,
         parentElem: this.resizableContainer,
         elemType,
-        attr: {
-          contenteditable: true,
-          id: `slide${slideIndex}Element${elemId}`,
-          placeholder: "Please start writing..."
-        }
+        style: {
+          width: "100%",
+          height: "100%"
+        },
+        attr
       });
     }
   }
@@ -124,7 +142,6 @@ class Element {
           class: "elem-rotator"
         }
       });
-
 
       // Drag and drop only to the content not title and comment section
 
@@ -181,6 +198,7 @@ class Element {
       } else {
         document.querySelector("#fontFamily").value = "sans-serif";
       }
+
       e.target.setAttribute("dataToolbarActive", "true");
 
       // updating style of the element on this.slideData
@@ -213,7 +231,7 @@ class Element {
         elemOnList.innerHTML = this.element.innerHTML;
       }
       this.slideData[this.slideIndex - 1][`elem${this.elemId}`]["innerHTML"] = this.element.innerHTML;
-      // console.log('this.slideDat:', this.slideData)
+      console.log('this.slideDat:', this.slideData)
     }, true);
 
     return this.element;

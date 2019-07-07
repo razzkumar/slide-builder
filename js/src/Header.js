@@ -25,11 +25,12 @@ class Header {
     // Appending this.headerContainer on root
     this.container.appendChild(this.headerContainer);
 
-    let brandContaner = createElementAndAppend({
+    // Brand 
+    createElementAndAppend({
       parentElem: this.headerContainer,
       elemType: "div",
       attr: {
-        class: "brand"
+        class: "brand",
       },
       innerHTML: `<h1><a href='/'>${BRAND_NAME}</a></h1>`
     });
@@ -71,20 +72,21 @@ class Header {
     this.createNewSlideBtn = createElementAndAppend({
       parentElem: fileDropDownlist,
       elemType: "span",
-      innerText: "New Slide"
+      innerText: "New Slide",
     });
+
     this.importSlides = createElementAndAppend({
       parentElem: fileDropDownlist,
       elemType: "div",
       innerHTML: '<i class="fa fa-download"></i> <span>Import</span>'
     });
+
     this.exportSlides = createElementAndAppend({
       parentElem: fileDropDownlist,
       elemType: "div",
       attr: null,
       innerHTML: '<i class="fa fa-upload"></i> <span>Export</span>'
     });
-
 
     // adding dropdown btn for insert handling
     let liOfExportHandler = createElementAndAppend({
@@ -123,6 +125,7 @@ class Header {
       elemType: "div",
       innerHTML: '<i class="fa fa-image"></i> <span>Image</span>'
     });
+
     this.insertVideo = createElementAndAppend({
       parentElem: insertDropDownlist,
       elemType: "div",
@@ -277,7 +280,7 @@ class Header {
     });
 
     // play btn
-    let playBtn = createElementAndAppend({
+    this.playBtn = createElementAndAppend({
       parentElem: this.headerContainer,
       elemType: "button",
       attr: {
@@ -291,7 +294,8 @@ class Header {
         textAllign: "center"
       }
     });
-    playBtn.addEventListener("click", this.openFullscreen);
+
+    this.playBtn.addEventListener("click", this.openFullscreen);
 
     return this;
   }
@@ -384,10 +388,13 @@ class Header {
   handleDropdownMenu(e) {
 
     let activeDropdown = document.querySelector(".show");
-    //check wether same btn clicked or not
-    if (activeDropdown !== e.target.nextSibling) {
+
+    //hide the dropdown menu
+    let nextSibling = e && e.target && e.target.nextSibling;
+    if (activeDropdown !== nextSibling || e === "hide") {
       activeDropdown && activeDropdown.classList.remove("show");
     }
-    e.target.nextSibling.classList.toggle("show");
+
+    nextSibling && nextSibling.classList.toggle("show");
   }
 }

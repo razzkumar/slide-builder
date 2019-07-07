@@ -6,9 +6,9 @@
 class App {
 
   /**
-   * 
    * @param {String} containerId Id of the container whare app is created 
    */
+
   constructor({
     containerId
   }) {
@@ -44,23 +44,41 @@ class App {
       }
     });
 
+    // Create notification container
+    // TODO
+
 
     // Create new slide on click 
     this.header.createNewSlideBtn.addEventListener("click", (e) => {
       this.makeNewSlide();
+      this.header.handleDropdownMenu("hide");
     });
 
     //Create new elenet on click
     this.header.insertElement.addEventListener("click", (e) => {
       this.makeNewElement();
+      this.header.handleDropdownMenu("hide");
+    })
+
+    this.header.insertImage.addEventListener("click", (e) => {
+      this.makeNewElement("img");
+      this.header.handleDropdownMenu("hide");
+    })
+
+    this.header.insertVideo.addEventListener("click", e => {
+      this.makeNewElement("video");
+      this.header.handleDropdownMenu("hide");
     })
 
     // Loading exported data
-    DATA.map(data => {
+    DATA.map((data, i) => {
+      this.slideData[i] = {
+        ...data
+      };
       this.makeNewSlide(data);
     });
 
-
+    // new slide
     this.makeNewSlide();
   }
 
@@ -69,10 +87,12 @@ class App {
    * A funtion to create new slide if "data" is passed exiting slide will be created 
    * otherwise it create the empty slide
    * @param  {Object} [data] Imported data
-   * 
    */
   makeNewSlide(data) {
-    this.slideData[this.slideIndex - 1] = {};
+
+    if (!data) {
+      this.slideData[this.slideIndex - 1] = {};
+    }
     this.newSlide = new Slide({
       container: this.slideContainer,
       toolbar: this.header,
@@ -80,13 +100,10 @@ class App {
       slideData: this.slideData,
       exportedData: data
     }).init();
-
     this.slideIndex++;
     this.slides.push(this.newSlide);
-
     // Create list that appear on left side after creating new slide
     this.makeSlideList();
-
   }
 
 
@@ -116,8 +133,31 @@ class App {
       parentElem: this.slideList,
       attr: {
         class: 'thumbnail'
+      },
+      style: {
+        position: 'relative'
       }
     });
+
+    //Creating delete botton
+    let deleteBtn = createElementAndAppend({
+      parentElem: thumbnail,
+      elemType: "i",
+      attr: {
+        class: "fa fa-remove delete"
+      },
+      style: {
+        position: "absolute",
+        right: "8px",
+        top: "4px",
+        lineHeight: "20px",
+        zIndex: 20
+      }
+    })
+
+    // Delete event and event handler is on util.js
+    deleteBtn.addEventListener("click", this.deleteSlide)
+
 
     let activeThumb = document.querySelector(".thumbnail.active");
     activeThumb && activeThumb.classList.remove("active");
@@ -131,9 +171,7 @@ class App {
     thumbnailSlideBody.addEventListener("click", (e) => {
 
       let id = e.currentTarget.getAttribute("dataslideindex");
-
       activeThumb = document.querySelector(".thumbnail.active");
-
       activeThumb && activeThumb.classList.remove("active");
       thumbnail.classList.add("active");
 
@@ -143,6 +181,7 @@ class App {
 
     })
 
+    // appending on list
     thumbnail.appendChild(thumbnailSlideBody);
 
     // removing contenteditable attribute on slide list
@@ -150,6 +189,8 @@ class App {
     allContentEditAble.forEach(elem => {
       elem.removeAttribute("contenteditable");
     });
+
+
   }
 
 
@@ -160,36 +201,62 @@ class App {
   makeNewElement(elemType) {
 
     let activeSlide = document.querySelector(".activeSlide");
-
-    let slideIndex = activeSlide.querySelector(".slide-body").getAttribute("dataslideindex");
-
+    let slideIndex = parseInt(activeSlide.querySelector(".slide-body").getAttribute("dataslideindex"));
     let slideWrapper = activeSlide.querySelector(".main-content");
-
     let elemId = slideWrapper.children.length + 1;
 
     this.slideData[slideIndex - 1][`elem${elemId}`] = {};
 
-    new Element({
-      elemType,
+    let params = {
       slideIndex,
+      elemType,
       slideData: this.slideData,
       parentElem: slideWrapper,
       elemId,
       createNewElement: true,
-      style: {
+      style: elemType === "img" ? {
         position: "absolute",
-        top: `${GAP_BETWEEN_ELEMENT/2}px`,
-        minHeight: "30px",
+        height: "300px",
+        width: "50%",
+      } : {
+        position: "absolute",
         height: DEFAULT_ELEMENT_HEIGHT + "px",
         width: "95%",
         fontSize: document.querySelector("#fontSize").value
       }
-    }).init();
+    }
+    new Element(params).init();
+  }
 
+  /**
+   * A callback function that handle the delete slide
+   * @param  {Event} {currentTarget}  Destructuring and geting currentTarget from event
+   */
+  deleteSlide = ({
+    currentTarget
+  }) => {
+    let thumbnail = currentTarget.parentElement;
+
+    let nextSibling = thumbnail.nextSibling;
+    let previousSibling = thumbnail.previousSibling;
+
+    let activeSlide = document.querySelector(".slide-wrapper.activeSlide");
+
+    if (nextSibling) {
+      nextSibling.classList.add("active");
+      activeSlide.nextSibling.classList.add("activeSlide");
+    } else if (previousSibling) {
+      previousSibling.classList.add("active");
+      activeSlide.previousSibling.classList.add("activeSlide");
+    } else {
+      // Removing thumbnail container at last
+      thumbnail.parentElement.parentElement.removeChild(thumbnail.parentElement);
+    }
+    thumbnail.parentElement.removeChild(thumbnail);
+    activeSlide.parentElement.removeChild(activeSlide);
   }
 
 }
-
 
 new App({
   containerId: "app"

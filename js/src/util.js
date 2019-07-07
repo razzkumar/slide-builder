@@ -158,76 +158,6 @@ const makeResizableDiv = (element) => {
   }
 }
 
-// toolbar element property 
-const toolbarActionsProperty = [{
-    parentElem: "liOfTextAllign",
-    elem: "i",
-    attr: {
-      title: "Text Align Left",
-      class: "fa fa-align-left",
-      dataCmd: "left",
-      cssProperty: "textAlign"
-    }
-  },
-  {
-    parentElem: "liOfTextAllign",
-    elem: "i",
-    attr: {
-      title: "Text Align Center",
-      class: "fa fa-align-center",
-      dataCmd: "center",
-      cssProperty: "textAlign"
-    }
-  },
-  {
-    parentElem: "liOfTextAllign",
-    elem: "i",
-    attr: {
-      title: "Text Align Right",
-      class: "fa fa-align-right",
-      dataCmd: "right",
-      cssProperty: "textAlign"
-    }
-  },
-  {
-    parentElem: "liOfTextAllign",
-    elem: "i",
-    attr: {
-      title: "Text Align Justify",
-      class: "fa fa-align-justify",
-      dataCmd: "justify",
-      cssProperty: "textAlign"
-    }
-  },
-
-  {
-    parentElem: "liOfTextFormat",
-    elem: "i",
-    attr: {
-      class: "fa fa-bold",
-      dataCmd: "bold",
-      cssProperty: "fontWeight"
-    }
-  },
-  {
-    parentElem: "liOfTextFormat",
-    elem: "i",
-    attr: {
-      class: "fa fa-italic",
-      dataCmd: "italic",
-      cssProperty: "fontStyle"
-    }
-  },
-  {
-    parentElem: "liOfTextFormat",
-    elem: "i",
-    attr: {
-      class: "fa fa-underline",
-      dataCmd: "underline",
-      cssProperty: "textDecoration"
-    }
-  }
-]
 /**
  * A funtion that takes inline style and convert to js Object style
  * @param  {Object} style style of element (eg. slide1.style)
@@ -262,7 +192,7 @@ const camalize = (str) => {
 }
 
 
-// Global events
+// Global events that delete selected 
 window.addEventListener("keydown", e => {
   if (e.key === "Delete") {
     let activeElem = document.querySelector("[datatoolbaractive = 'true']").parentElement;
@@ -286,4 +216,13 @@ const exportToJsonFile = (jsonData, fileName) => {
   linkElement.setAttribute('href', dataUri);
   linkElement.setAttribute('download', exportFileDefaultName);
   linkElement.click();
+}
+/**
+ * A function that generate random number between passed range
+ * @param  {Number} min Lower value of the range
+ * @param  {Number} max Upper value of the range
+ * @returns {Number} random number between given number
+ */
+const randomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }

@@ -32,7 +32,6 @@ class Slide {
     if (this.exportedData) {
 
       if (this.exportedData.elemTitle) {
-        this.slideData[this.exportedData.elemTitle.slideIndex - 1][`elemTitle`] = {};
         this.createElement({
           slideData: this.slideData,
           parentElem: this.slideBody,
@@ -41,7 +40,6 @@ class Slide {
       }
 
       if (this.exportedData.elemUserNote) {
-        this.slideData[this.exportedData.elemUserNote.slideIndex - 1][`elemUserNote`] = {};
         this.createElement({
           slideData: this.slideData,
           parentElem: slideWrapper,
@@ -60,16 +58,13 @@ class Slide {
       });
 
       let elemCount = 1;
-
       while (this.exportedData[`elem${elemCount}`] && this.exportedData[`elem${elemCount}`].elemId) {
-
         this.createElement({
           parentElem: this.slideContentWrapper,
           slideData: this.slideData,
           ...this.exportedData[`elem${elemCount}`]
         });
 
-        this.slideData[this.exportedData.elemUserNote.slideIndex - 1][`elem${elemCount}`] = {};
         elemCount++;
       }
 
@@ -116,6 +111,7 @@ class Slide {
         slideData: this.slideData,
       }).init();
 
+      // Creating main contant
       this.slideContentWrapper = createElementAndAppend({
         parentElem: this.slideBody,
         attr: {
@@ -148,9 +144,7 @@ class Slide {
 
   createElement(commonParameters) {
 
-
     this.slideData[this.slideIndex - 1][`elem${this.elementCount}`] = {};
-
     new Element(commonParameters).init();
     this.elementCount++;
 

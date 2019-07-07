@@ -70,6 +70,34 @@
   background: gray;
 }
 
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+
+[data-tooltip]::after {
+  position: absolute;
+  color: #fff;
+  background-color: #000;
+  left: -40px;
+  width: 120px;
+  bottom: -40px;
+  padding: 5px 8px;
+  content: attr(data-tooltip);
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.2s;
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0)
+}
 
 /* Main content style (ie slide) */
 
@@ -102,6 +130,10 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
+.thumbnail .delete {
+  display: none;
+}
+
 .thumbnail:hover {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15), 0 3px 4px rgba(0, 0, 0, 0.13);
 }
@@ -109,6 +141,30 @@
 .thumbnail.active {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25), 0 5px 10px rgba(0, 0, 0, 0.22);
 }
+
+.thumbnail.active .delete {
+  display: inline;
+}
+
+.thumbnail .delete::after {
+  content: "Delete";
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  visibility: hidden;
+  opacity: 0;
+  color: #e44;
+  transform: translateY(10px);
+  transition: opacity 0.3s,
+    transform 0.2s;
+}
+
+.thumbnail .delete:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-10px)
+}
+
 
 .slide-wrapper {
   border: 1px solid gray;
