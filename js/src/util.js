@@ -18,8 +18,8 @@ const styleElement = (elem, style) => {
 
 /**
  * A function to append attributes on the  HTML element
- * @param  {HTML element} elem  HTML element in which attributes are applied
- * @param  {HTML Attributes} attrs Object of attributes that applied HTML  element
+ * @param  {*} elem  HTML element in which attributes are applied
+ * @param  {*} attrs Object of attributes that applied HTML  element
  * @example
  * addAttributes(heading,{class:"heading-container"})
  */
@@ -35,12 +35,12 @@ const addAttributes = (elem, attrs) => {
 /**
  * A function to create HTML element and apply style as well as add the attributes
  * 
- * @param  {HTML element} {parentElem  HTML element in which new HTML element is appended
- * @param  {Valid HTML Tag} elemType [n="div"] Type of element to create
- * @param  {Attributes} attr attributes of the element 
- * @param  {String} innerText [n] Content of element  
- * @param  {HTML} innerHTML [n] Content of element
- * @param  {Style Object} style} Style of the element is to be added with valid css property
+ * @param  {*} {parentElem  HTML element in which new HTML element is appended
+ * @param  {*} elemType [n="div"] Type of element to create
+ * @param  {*} attr attributes of the element 
+ * @param  {*} innerText [n] Content of element  
+ * @param  {*} innerHTML [n] Content of element
+ * @param  {*} style} Style of the element is to be added with valid css property
  */
 const createElementAndAppend = ({
   parentElem,
@@ -64,100 +64,133 @@ const createElementAndAppend = ({
   return elem;
 }
 /**
- * A function that helps to drag and drop  element 
+ * A function that helps to change the position of element by draging or resizing and rotating 
  * @param  {HTML element} element element in which drag event should fired
  * @example
- * dragAndDropElement(slide1Element1);
+ * dragAndDropElement(slide1Element1,slideData,"drag");
  */
-const dragAndDropElement = (element) => {
 
-  let parentX = 0;
-  let parentY = 0;
+const updatePosition = (element, type) => {
 
-  let shiftX = 0;
-  let shiftY = 0;
+  let style = formatStyleToStore(element.style);
 
-  let dragger = element.querySelector(".dragger");
+  if (type === "drag") {
 
-  dragger.addEventListener("mousedown", (event) => {
+    let parentX = 0;
+    let parentY = 0;
 
-    parentX = element.parentElement.getBoundingClientRect().left;
-    parentY = element.parentElement.getBoundingClientRect().top;
+    let shiftX = 0;
+    let shiftY = 0;
+
+    let dragger = element.querySelector(".dragger");
+
+    dragger.addEventListener("mousedown", (event) => {
+
+      parentX = element.parentElement.getBoundingClientRect().left;
+      parentY = element.parentElement.getBoundingClientRect().top;
 
 
-    event.preventDefault();
+      event.preventDefault();
 
-    shiftX = event.clientX - element.getBoundingClientRect().left;
-    shiftY = event.clientY - element.getBoundingClientRect().top;
+      shiftX = event.clientX - element.getBoundingClientRect().left;
+      shiftY = event.clientY - element.getBoundingClientRect().top;
 
-    moveAt(event.clientX, event.clientY);
+      moveAt(event.clientX, event.clientY);
 
-    // move the element on mousemove
-    element.parentElement.addEventListener('mousemove', onMouseMove);
-    // drop the element, remove unneeded handlers
-    dragger.onmouseup = function () {
-      dragger.style.cursor = "grab";
-      dragger.style.cursor = "-moz-grabb";
-      dragger.style.cursor = "-webkit-grabb";
+      // move the element on mousemove
+      element.parentElement.addEventListener('mousemove', onMouseMove);
+      // drop the element, remove unneeded handlers
+      dragger.onmouseup = function () {
 
-      element.parentElement.removeEventListener('mousemove', onMouseMove);
-      dragger.onmouseup = null;
-    };
+        let lastFcused = document.querySelector("[dataToolbarActive='true']");
+        if (lastFcused) {
+          lastFcused.focus();
+        }
+        dragger.style.cursor = "grab";
+        element.parentElement.removeEventListener('mousemove', onMouseMove);
+        dragger.onmouseup = null;
+      };
 
-  });
+    });
 
-  function onMouseMove(event) {
-    moveAt(event.clientX, event.clientY);
+    function onMouseMove(event) {
+      moveAt(event.clientX, event.clientY);
+    }
+
+    function moveAt(pageX, pageY) {
+
+      let left = pageX - shiftX - parentX;
+      let top = pageY - shiftY - parentY
+
+      // convert to percentage
+      let leftPercentage = (left * 100) / element.parentElement.getBoundingClientRect().width + '%'
+      let topPercentage = (top * 100) / element.parentElement.getBoundingClientRect().height + '%'
+
+      dragger.style.cursor = "grabbing";
+      element.style.left = leftPercentage;
+      element.style.top = topPercentage;
+
+      // updating thumbnail
+      let id = element.getAttribute("id");
+      let thumbnailElem = document.querySelector(`.thumbnail #${id}`);
+
+      if (thumbnailElem) {
+        thumbnailElem.style.left = leftPercentage;
+        thumbnailElem.style.top = topPercentage;
+      }
+    }
+
+    //preventing default drag and drop
+    dragger.addEventListener("dragstart", () => false);
+
+  } else if (type === "resize") {
+
+    // resize 
+    let original_width = 0;
+    let original_height = 0;
+    let original_mouse_x = 0;
+    let original_mouse_y = 0;
+
+    const resizer = element.querySelector('.resizer');
+
+    resizer && resizer.addEventListener('mousedown', function (e) {
+      e.preventDefault();
+      original_width = element.getBoundingClientRect().width;
+      original_height = element.getBoundingClientRect().height;
+      original_mouse_x = e.pageX;
+      original_mouse_y = e.pageY;
+      window.addEventListener('mousemove', resize);
+      window.addEventListener('mouseup', stopResize);
+    })
+
+    function resize(e) {
+
+      let width = original_width + (e.pageX - original_mouse_x);
+      let height = original_height + (e.pageY - original_mouse_y);
+
+      // convert to percentage
+      width = (width * 100) / element.parentElement.getBoundingClientRect().width + '%'
+      height = (height * 100) / element.parentElement.getBoundingClientRect().height + '%'
+      element.style.width = width;
+      element.style.height = height;
+
+      // updating thumbnail
+      let id = element.getAttribute("id");
+      let thumbnailElem = document.querySelector(`.thumbnail #${id}`);
+
+      if (thumbnailElem) {
+        thumbnailElem.style.width = width + 'px'
+        thumbnailElem.style.height = height + 'px'
+      }
+    }
+
+    function stopResize() {
+      window.removeEventListener('mousemove', resize)
+    }
+
   }
 
-  function moveAt(pageX, pageY) {
-    dragger.style.cursor = "grabbing";
-    dragger.style.cursor = "-moz-grabbing";
-    dragger.style.cursor = "-webkit-grabbing";
-    element.style.left = pageX - shiftX - parentX + 'px';
-    element.style.top = pageY - shiftY - parentY + 'px';
-  }
-
-  //preventing default drag and drop
-  dragger.addEventListener("dragstart", () => false);
 }
-/**
- * A function to resize any HTML element of the slide content
- *
- * @param  {HTML element} element HTML element which is to be resized
- */
-const makeResizableDiv = (element) => {
-  const resizer = element.querySelector('.resizer');
-
-  let original_width = 0;
-  let original_height = 0;
-  let original_mouse_x = 0;
-  let original_mouse_y = 0;
-
-  resizer && resizer.addEventListener('mousedown', function (e) {
-    e.preventDefault();
-    original_width = element.getBoundingClientRect().width;
-    original_height = element.getBoundingClientRect().height;
-    original_mouse_x = e.pageX;
-    original_mouse_y = e.pageY;
-    window.addEventListener('mousemove', resize);
-    window.addEventListener('mouseup', stopResize);
-  })
-
-  function resize(e) {
-
-    const width = original_width + (e.pageX - original_mouse_x);
-    const height = original_height + (e.pageY - original_mouse_y);
-
-    element.style.width = width + 'px'
-    element.style.height = height + 'px'
-  }
-
-  function stopResize() {
-    window.removeEventListener('mousemove', resize)
-  }
-}
-
 /**
  * A funtion that takes inline style and convert to js Object style
  * @param  {Object} style style of element (eg. slide1.style)
@@ -192,15 +225,6 @@ const camalize = (str) => {
 }
 
 
-// Global events that delete selected 
-window.addEventListener("keydown", e => {
-  if (e.key === "Delete") {
-    let activeElem = document.querySelector("[datatoolbaractive = 'true']").parentElement;
-    activeElem.parentNode.removeChild(activeElem);
-  }
-}, false);
-
-
 /**
  * A function that helps to  export All Collected/prepated data  
  * @param  {Object} jsonData Data is to be exported
@@ -217,6 +241,7 @@ const exportToJsonFile = (jsonData, fileName) => {
   linkElement.setAttribute('download', exportFileDefaultName);
   linkElement.click();
 }
+
 /**
  * A function that generate random number between passed range
  * @param  {Number} min Lower value of the range

@@ -119,130 +119,49 @@ const toolbarActionsProperty = [{
 
 const DATA = [{
   "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 1,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide1ElementUserNote",
-      "contenteditable": true
-    },
     "style": {
       "height": "70px"
-    },
-    "innerHTML": "NOTE :fsdafsadfsadfsadf"
+    }
   },
   "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 1,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide1ElementTitle",
-      "placeholder": "Enter Title here..."
-    },
     "style": {
       "fontSize": "48px",
+      "height": "80px",
       "minHeight": "80px",
+      "maxHeight": "240px",
       "paddingTop": "10px",
       "paddingRight": "10px",
       "paddingBottom": "10px",
       "paddingLeft": "10px"
     },
-    "innerHTML": "Slide 1 Title fsadfasdf"
+    "innerHTML": "Hola&nbsp;"
   },
   "elem1": {
-    "elemId": 1,
-    "slideIndex": 1,
     "style": {
+      "backgroundColor": "rgb(175, 46, 190)",
+      "color": "rgb(255, 255, 255)",
       "position": "absolute",
-      "top": "10px",
+      "top": "82.6172%",
       "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%"
-    },
-    "innerHTML": "jh fdosahf hasdfhjiosd f"
-  },
-  "elem2": {
-    "elemId": 2,
-    "slideIndex": 1,
-    "style": {
-      "position": "absolute",
-      "top": "90px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "fontFamily": "Montserrat, sans-serif",
-      "textAlign": "center",
-      "backgroundColor": "rgb(64, 0, 64)",
-      "color": "rgb(250, 250, 250)"
-    },
-    "innerHTML": "fasdffsadfs"
-  }
-}, {
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 2,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide2ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px",
-      "textAlign": "center"
-    },
-    "innerHTML": "NOTE :fsadfsadfsa"
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 2,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide2ElementTitle",
-      "placeholder": "Enter Title here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "minHeight": "80px",
-      "paddingTop": "10px",
-      "paddingRight": "10px",
-      "paddingBottom": "10px",
-      "paddingLeft": "10px"
-    },
-    "innerHTML": "Slide 2 Title fsdf"
-  },
-  "elem1": {
-    "elemId": 1,
-    "slideIndex": 2,
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
+      "height": "15.625%",
+      "width": "17.1579%",
       "maxWidth": "100%",
-      "textAlign": "right",
-      "fontWeight": "bold"
+      "left": "82.4769%"
     },
-    "innerHTML": "nana"
+    "elemId": 1,
+    "slideIndex": 1,
+    "innerHTML": "A quick brown fox jumps over fasfdas"
   },
   "elem2": {
     "elemId": 2,
-    "slideIndex": 2,
+    "slideIndex": 1,
+    "elemType": "img",
     "style": {
       "position": "absolute",
-      "top": "90px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "textAlign": "center"
-    },
-    "innerHTML": "fsadfsdafdsafasdfsafsdafdsafsaf"
+      "height": "300px",
+      "width": "50%",
+      "left": "3.14864%",
+      "top": "8.59375%"
+    }
   }
 }]

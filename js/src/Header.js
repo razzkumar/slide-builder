@@ -295,36 +295,8 @@ class Header {
       }
     });
 
-    this.playBtn.addEventListener("click", this.openFullscreen);
-
     return this;
   }
-
-  /* Function to open fullscreen mode */
-  openFullscreen(e) {
-
-    let elem = document.querySelector(".slide-wrapper#slide-1");
-
-    let allContentEditAble = elem.querySelectorAll("[contenteditable='true']");
-    allContentEditAble.forEach(elem => {
-      elem.setAttribute("contenteditable", "false");
-
-    })
-
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      /* Chrome, Safari & Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      /* IE/Edge */
-      elem.msRequestFullscreen();
-    }
-  }
-
 
   /**
    * A function that handle toolbar related to text alignment and font (i.e text-align,font-size)

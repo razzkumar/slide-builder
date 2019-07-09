@@ -35,15 +35,20 @@ class Element {
     this.elemId = elemId;
     this.slideData = slideData;
 
-    this.slideData[slideIndex - 1][`elem${elemId}`]["elemId"] = elemId;
+    // storing data;
+    if (createNewElement) {
 
-    this.slideData[slideIndex - 1][`elem${elemId}`]["slideIndex"] = slideIndex;
+      this.slideData[slideIndex - 1][`elem${elemId}`]["elemId"] = elemId;
 
-    if (attr) {
-      this.slideData[slideIndex - 1][`elem${elemId}`]["attr"] = attr;
-    } else if (elemType) {
-      this.slideData[slideIndex - 1][`elem${elemId}`]["elemType"] = elemType;
+      this.slideData[slideIndex - 1][`elem${elemId}`]["slideIndex"] = slideIndex;
+
+      if (attr) {
+        this.slideData[slideIndex - 1][`elem${elemId}`]["attr"] = attr;
+      } else if (elemType) {
+        this.slideData[slideIndex - 1][`elem${elemId}`]["elemType"] = elemType;
+      }
     }
+
     if (elemId === "Title") {
       this.element = createElementAndAppend({
         parentElem,
@@ -63,13 +68,13 @@ class Element {
       });
 
     } else {
-
       let upperElement = document.querySelector(`#slide${slideIndex}Element${elemId-1}Container`);
 
       let top = upperElement ? parseInt(upperElement.style.height) * (elemId - 1) + (GAP_BETWEEN_ELEMENT / 2) * (elemId) : GAP_BETWEEN_ELEMENT / 2;
 
       // placing element in random place after place is occupied
-      if ((top + parseInt(style.height)) >= parseInt(this.parentElem.style.height)) {
+
+      if (style && (top + parseInt(style.height)) >= parseInt(this.parentElem.style.height)) {
         top = randomNumber(DEFAULT_ELEMENT_HEIGHT, parseInt(this.parentElem.style.height) - style.height);
         style.backgroundColor = "#aef";
         style.width = randomNumber(50, 90) + "%";
@@ -82,7 +87,7 @@ class Element {
         },
         style: {
           ...style,
-          top: createNewElement ? `${top}px` : style.top
+          top: createNewElement && !style && !style.top ? `${top}px` : style.top
         }
       });
 
@@ -101,7 +106,7 @@ class Element {
         innerHTML,
         parentElem: this.resizableContainer,
         elemType,
-        style: {
+        style: elemType === "img" && {
           width: "100%",
           height: "100%"
         },
@@ -145,15 +150,15 @@ class Element {
 
       // Drag and drop only to the content not title and comment section
 
-      dragAndDropElement(this.resizableContainer);
+      updatePosition(this.resizableContainer, "drag", this.slideData, this.slideIndex, this.elemId);
 
       // make resizeable
-      makeResizableDiv(this.resizableContainer);
+      updatePosition(this.resizableContainer, "resize", this.slideData, this.slideIndex, this.elemId);
+
+      //rotation 
+      updatePosition(this.resizableContainer, "rotate", this.slideData, this.slideIndex, this.elemId);
 
     }
-
-    this.slideData[this.slideIndex - 1][`elem${this.elemId}`]["style"] = formatStyleToStore(this.element.style);
-
     // Focus event on event
     this.element.addEventListener("focus", (e) => {
 
@@ -196,7 +201,7 @@ class Element {
       if (fontFamily) {
         document.querySelector("#fontFamily").value = fontFamily;
       } else {
-        document.querySelector("#fontFamily").value = "sans-serif";
+        document.querySelector("#fontFamily").value = "sans-serif"; //default
       }
 
       e.target.setAttribute("dataToolbarActive", "true");
@@ -205,32 +210,39 @@ class Element {
 
 
       let currentStyle = formatStyleToStore(e.target.style);
+
       let parentElemEId = e.target.parentElement.getAttribute("id");
 
       if (parentElemEId && parentElemEId.includes("Container")) {
 
         let style = formatStyleToStore(e.target.parentElement.style);
-        style = {
-          ...style,
-          ...currentStyle
-        };
+
+        if (e.currentTarget.tagName !== "IMG") {
+          style = {
+            ...currentStyle,
+            ...style,
+          };
+        }
 
         if (JSON.stringify(style) !== JSON.stringify(this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style)) {
           this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = style;
+
         }
       } else if (JSON.stringify(currentStyle) !== JSON.stringify(this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style)) {
         this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = currentStyle;
       }
     });
 
-
     //Watch the change on slide's element's content and collectd the data
     this.element.addEventListener("input", (e) => {
+
       let elemOnList = document.querySelector(`.slide-list #slide${this.slideIndex}Element${this.elemId}`);
+
       if (elemOnList) {
         elemOnList.innerHTML = this.element.innerHTML;
       }
       this.slideData[this.slideIndex - 1][`elem${this.elemId}`]["innerHTML"] = this.element.innerHTML;
+
       console.log('this.slideDat:', this.slideData)
     }, true);
 
