@@ -6,14 +6,13 @@ class Slide {
     this.container = params.container;
     this.toolbar = params.toolbar;
     this.slideIndex = params.slideIndex;
-    //debugger;
+
     this.slideData = params.slideData;
     this.exportedData = params.exportedData;
     this.elementCount = 1;
   }
 
   init() {
-
     let slide = createElementAndAppend({
       parentElem: this.container,
       attr: {
@@ -77,13 +76,14 @@ class Slide {
 
     } else {
       // UserNote
-      //debugger;
+
       this.slideData[this.slideIndex - 1][`elemUserNote`] = {};
       new Element({
         elemType: "div",
         slideIndex: this.slideIndex,
         slideData: this.slideData,
         parentElem: slide,
+        createNewElement: true,
         innerHTML: "",
         elemId: "UserNote",
         attr: {
@@ -93,21 +93,23 @@ class Slide {
           contenteditable: true,
         },
         style: {
-          height: COMMENT_CONTAINER_HEIGHT + "px"
+          height: COMMENT_CONTAINER_HEIGHT + "px",
+          fontSize: "24px"
         },
       }).init();
 
-      //debugger;
+
       this.slideData[this.slideIndex - 1][`elemUserNote`]["style"] = {
         height: COMMENT_CONTAINER_HEIGHT + "px"
       };
       // Slide title
-      //debugger;
+
       this.slideData[this.slideIndex - 1][`elemTitle`] = {};
 
       new Element({
         parentElem: this.slideBody,
         slideIndex: this.slideIndex,
+        createNewElement: true,
         elemId: "Title",
         attr: {
           class: 'title',
@@ -125,7 +127,7 @@ class Slide {
         },
         slideData: this.slideData,
       }).init();
-      //debugger;
+
       this.slideData[this.slideIndex - 1][`elemTitle`]["style"] = {
         fontSize: "48px",
         minHeight: TITLE_CONTAINER_MIN_HEIGHT + "px",
@@ -156,6 +158,8 @@ class Slide {
           height: DEFAULT_ELEMENT_HEIGHT + "px",
           width: "95%",
           maxWidth: "100%",
+          color: "#fff",
+          backgroundColor: "rgb(72, 180, 239)",
           fontSize: document.querySelector("#fontSize").value
         }
       });
@@ -167,7 +171,7 @@ class Slide {
 
     if (!this.exportedData) {
       this.slideData[this.slideIndex - 1][`elem${this.elementCount}`] = {};
-      //debugger;
+
       this.slideData[this.slideIndex - 1][`elem${this.elementCount}`]["style"] = commonParameters.style;
 
     }

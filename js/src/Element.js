@@ -75,6 +75,7 @@ class Element {
       // placing element in random place after place is occupied
 
       if (style && (top + parseInt(style.height)) >= parseInt(this.parentElem.style.height)) {
+
         top = randomNumber(DEFAULT_ELEMENT_HEIGHT, parseInt(this.parentElem.style.height) - style.height);
         style.backgroundColor = "#aef";
         style.width = randomNumber(50, 90) + "%";
@@ -106,9 +107,11 @@ class Element {
         innerHTML,
         parentElem: this.resizableContainer,
         elemType,
-        style: elemType === "img" && {
+        style: elemType === "img" ? {
           width: "100%",
           height: "100%"
+        } : {
+          fontSize: "22px",
         },
         attr
       });
@@ -141,42 +144,30 @@ class Element {
         }
       });
 
-      this.rotator = createElementAndAppend({
-        parentElem: this.resizableContainer,
-        attr: {
-          class: "elem-rotator"
-        }
-      });
-
       // Drag and drop only to the content not title and comment section
 
-      updatePosition(this.resizableContainer, "drag", this.slideData, this.slideIndex, this.elemId);
+      updatePosition(this.resizableContainer, "drag");
 
       // make resizeable
-      updatePosition(this.resizableContainer, "resize", this.slideData, this.slideIndex, this.elemId);
-
-      //rotation 
-      updatePosition(this.resizableContainer, "rotate", this.slideData, this.slideIndex, this.elemId);
+      updatePosition(this.resizableContainer, "resize");
 
     }
     // Focus event on event
     this.element.addEventListener("focus", (e) => {
-
+      if (!this.element.innerHTML) {
+        this.element.innerHTML = " "
+      }
       let activeElem = document.querySelector("[dataToolbarActive='true']");
-
+      // make resizer visible
       let previousActiveResizer = activeElem && activeElem.parentElement.querySelector(".resizer");
-      let previousActiveRotator = activeElem && activeElem.parentElement.querySelector(".elem-rotator");
 
-      if (previousActiveResizer || previousActiveRotator) {
-        previousActiveRotator.style.display = "none";
+      if (previousActiveResizer) {
         previousActiveResizer.style.display = "none";
       }
 
-      if (this.resizer || this.rotator) {
+      if (this.resizer) {
         this.resizer.style.display = "initial";
-        this.rotator.style.display = "initial";
       }
-
 
       activeElem && activeElem.removeAttribute("dataToolbarActive");
 
@@ -205,33 +196,15 @@ class Element {
       }
 
       e.target.setAttribute("dataToolbarActive", "true");
-
-      // updating style of the element on this.slideData
-
-
-      let currentStyle = formatStyleToStore(e.target.style);
-
-      let parentElemEId = e.target.parentElement.getAttribute("id");
-
-      if (parentElemEId && parentElemEId.includes("Container")) {
-
-        let style = formatStyleToStore(e.target.parentElement.style);
-
-        if (e.currentTarget.tagName !== "IMG") {
-          style = {
-            ...currentStyle,
-            ...style,
-          };
-        }
-
-        if (JSON.stringify(style) !== JSON.stringify(this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style)) {
-          this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = style;
-
-        }
-      } else if (JSON.stringify(currentStyle) !== JSON.stringify(this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style)) {
-        this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = currentStyle;
-      }
+      this.updateStyleData();
     });
+
+    this.element.addEventListener("focusout", () => {
+      if (!this.element.innerHTML.trim()) {
+        this.element.innerHTML = ""
+      }
+      this.updateStyleData();
+    })
 
     //Watch the change on slide's element's content and collectd the data
     this.element.addEventListener("input", (e) => {
@@ -241,11 +214,39 @@ class Element {
       if (elemOnList) {
         elemOnList.innerHTML = this.element.innerHTML;
       }
+
       this.slideData[this.slideIndex - 1][`elem${this.elemId}`]["innerHTML"] = this.element.innerHTML;
 
-      console.log('this.slideDat:', this.slideData)
+      console.log('this.slideDat:', this.slideData);
+
+      this.updateStyleData();
     }, true);
 
-    return this.element;
+    return this.resizableContainer;
+  }
+
+  // updating style of the element on this.slideData
+  updateStyleData() {
+    let currentStyle = formatStyleToStore(this.element.style);
+    let prevStyle = this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style;
+
+    let parentElement = this.element.parentElement;
+    let parentElemEId = parentElement.getAttribute("id");
+
+    if (parentElemEId && parentElemEId.includes("Container")) {
+      let style = formatStyleToStore(parentElement.style);
+      if (this.element.tagName !== "IMG") {
+        style = {
+          ...currentStyle,
+          ...style,
+        };
+      }
+
+      if (JSON.stringify(style) !== JSON.stringify(prevStyle)) {
+        this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = style;
+      }
+    } else if (JSON.stringify(currentStyle) !== JSON.stringify(prevStyle)) {
+      this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = currentStyle;
+    }
   }
 }

@@ -59,12 +59,11 @@ const createElementAndAppend = ({
   } else if (innerText) {
     elem.innerText = innerText;
   }
-
   parentElem.appendChild(elem);
   return elem;
 }
 /**
- * A function that helps to change the position of element by draging or resizing and rotating 
+ * A function that helps to change the position of element by draging or resizing 
  * @param  {HTML element} element element in which drag event should fired
  * @example
  * dragAndDropElement(slide1Element1,slideData,"drag");
@@ -72,7 +71,6 @@ const createElementAndAppend = ({
 
 const updatePosition = (element, type) => {
 
-  let style = formatStyleToStore(element.style);
 
   if (type === "drag") {
 
@@ -132,6 +130,7 @@ const updatePosition = (element, type) => {
 
       // updating thumbnail
       let id = element.getAttribute("id");
+
       let thumbnailElem = document.querySelector(`.thumbnail #${id}`);
 
       if (thumbnailElem) {
@@ -169,18 +168,18 @@ const updatePosition = (element, type) => {
       let height = original_height + (e.pageY - original_mouse_y);
 
       // convert to percentage
-      width = (width * 100) / element.parentElement.getBoundingClientRect().width + '%'
-      height = (height * 100) / element.parentElement.getBoundingClientRect().height + '%'
-      element.style.width = width;
-      element.style.height = height;
+      let widthPercentage = (width * 100) / element.parentElement.getBoundingClientRect().width + '%'
+      let heightPercentage = (height * 100) / element.parentElement.getBoundingClientRect().height + '%'
+      element.style.width = widthPercentage;
+      element.style.height = heightPercentage;
 
       // updating thumbnail
       let id = element.getAttribute("id");
       let thumbnailElem = document.querySelector(`.thumbnail #${id}`);
 
       if (thumbnailElem) {
-        thumbnailElem.style.width = width + 'px'
-        thumbnailElem.style.height = height + 'px'
+        thumbnailElem.style.width = widthPercentage
+        thumbnailElem.style.height = heightPercentage
       }
     }
 
@@ -250,4 +249,22 @@ const exportToJsonFile = (jsonData, fileName) => {
  */
 const randomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+/**
+ * A function that remove the un
+ * @param {*} elem 
+ */
+const removeUnnecessaryAttr = (elem) => {
+  let dragger = elem.querySelector(".dragger");
+  dragger.parentElement.removeChild(dragger)
+
+  let resizer = elem.querySelector(".resizer");
+  resizer.parentElement.removeChild(resizer)
+  // removing contenteditable attribute on slide list
+  let allContentEditAble = elem.querySelectorAll("[contenteditable='true']");
+  allContentEditAble.forEach(el => {
+    el.removeAttribute("contenteditable");
+  });
+
 }

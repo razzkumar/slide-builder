@@ -75,10 +75,30 @@ class Header {
       innerText: "New Slide",
     });
 
-    this.importSlides = createElementAndAppend({
+
+
+    // import
+    let importSlideWrapper = createElementAndAppend({
       parentElem: fileDropDownlist,
-      elemType: "div",
-      innerHTML: '<i class="fa fa-download"></i> <span>Import</span>'
+    })
+    createElementAndAppend({
+      parentElem: importSlideWrapper,
+      elemType: "label",
+      attr: {
+        class: "import-file",
+        for: "importJson"
+      },
+      innerHTML: '<i class="fa fa-download"><span>Import</span>'
+    })
+    this.importSlides = createElementAndAppend({
+      parentElem: importSlideWrapper,
+      elemType: "input",
+      attr: {
+        type: "file",
+        name: "importJson",
+        id: "importJson",
+        accept: "application/json, .json"
+      }
     });
 
     this.exportSlides = createElementAndAppend({

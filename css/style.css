@@ -185,6 +185,10 @@
 div[contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block;
+  color: #fff;
+}
+
+div.title[contenteditable=true]:empty:before {
   color: gray;
 }
 
@@ -224,37 +228,20 @@ div[contenteditable="true"]:hover {
   cursor: grab;
 }
 
+.fullscreen {
+  background-color: #fff;
+}
 
-.elem-rotator {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  border-radius: 50%;
-  border: 1px solid #AAA;
-  transform: translateX(-50%);
-  height: 8px;
-  width: 8px;
-  cursor: url("../img/rotate.ico");
+.fullscreen .slide-body {
+  padding: 40px;
+}
+
+input[type="file"] {
   display: none;
 }
 
-.elem-rotator::after {
-  content: "";
-  width: 1px;
-  height: 10px;
-  background-color: #AAA;
-  position: absolute;
-  text-align: center;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.fullscreen {
-  padding: 30px;
-}
-
-/* Full screen style */
-.slide-wrapper:fullscreen {
-  background-color: #fff;
+.import-file {
+  display: inline-block;
+  padding: 0 6px;
+  cursor: pointer;
 }

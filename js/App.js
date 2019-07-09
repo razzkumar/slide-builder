@@ -26,7 +26,6 @@ class App {
   init() {
 
     this.header = new Header(this.container).init();
-
     this.slideMainContainer = createElementAndAppend({
       parentElem: this.container,
       attr: {
@@ -79,23 +78,40 @@ class App {
       this.header.handleDropdownMenu("hide");
     })
 
-    // Loading exported data
-    DATA && DATA.map((data, i) => {
+    // // Loading exported data
+    // if (DATA && DATA.length) {
+    //   DATA && DATA.map((data, i) => {
 
-      this.slideData[i] = {
-        ...data
-      };
-      //debugger;
+    //     this.slideData[i] = {
+    //       ...data
+    //     };
 
-      this.makeNewSlide(data);
-    });
-
-    // new slide
-    this.makeNewSlide();
-
+    //     this.makeNewSlide(data);
+    //   })
+    // } else {
+    //   // new slide
+    //   this.makeNewSlide();
+    // }
 
     // handle presentation mode
     this.header.playBtn.addEventListener("click", this.presentationModeHandler.bind(this));
+
+    // Exporting data
+    this.header.exportSlides.addEventListener("click", () => {
+      exportToJsonFile(this.slideData, "Slide-data");
+    });
+
+    // Importing slides
+
+    this.header.importSlides.addEventListener("change", (e) => {
+      let jsonData = e.target.files[0];
+
+      fetch(jsonData)
+        .then(response => response.json())
+        .then(json => console.log(json));
+    });
+
+    this.makeNewSlide();
   }
 
   styleContainers() {
@@ -125,7 +141,7 @@ class App {
   makeNewSlide(data) {
 
     if (!data) {
-      //debugger;
+
       this.slideData[this.slideIndex - 1] = {};
     }
     this.newSlide = new Slide({
@@ -150,7 +166,6 @@ class App {
   makeSlideList() {
 
     // Cloning thumbnailSlideBody for list
-
     let thumbnailSlideBody = this.newSlide.slideBody.cloneNode(true);
 
     let activeSlide = document.querySelector(".activeSlide");
@@ -192,27 +207,11 @@ class App {
       }
     })
 
-    // Delete event and event handler is on util.js
+    // Delete event and event handler is on util.js 
     deleteBtn.addEventListener("click", this.deleteSlide)
-
-
-    let activeThumb = document.querySelector(".thumbnail.active");
-    activeThumb && activeThumb.classList.remove("active");
-    thumbnail.classList.add("active");
-
-    activeSlide && activeSlide.classList.remove("activeSlide");
-    document.querySelector(`#slide-${this.slideIndex-1}`).classList.add("activeSlide");
-
-    let elemRotator = thumbnailSlideBody.querySelector(".elem-rotator");
-    elemRotator.parentElement.removeChild(elemRotator)
-    let dragger = thumbnailSlideBody.querySelector(".dragger");
-    dragger.parentElement.removeChild(dragger)
-    let resizer = thumbnailSlideBody.querySelector(".resizer");
-    resizer.parentElement.removeChild(resizer)
 
     // Adding click event to change slide 
     thumbnailSlideBody.addEventListener("click", (e) => {
-
       let id = e.currentTarget.getAttribute("dataslideindex");
       activeThumb = document.querySelector(".thumbnail.active");
       activeThumb && activeThumb.classList.remove("active");
@@ -224,16 +223,17 @@ class App {
 
     });
 
-    // removing contenteditable attribute on slide list
-    let allContentEditAble = thumbnailSlideBody.querySelectorAll("[contenteditable='true']");
-    allContentEditAble.forEach(elem => {
-      elem.removeAttribute("contenteditable");
-    });
+    let activeThumb = document.querySelector(".thumbnail.active");
+    activeThumb && activeThumb.classList.remove("active");
+    thumbnail.classList.add("active");
+
+    activeSlide && activeSlide.classList.remove("activeSlide");
+    document.querySelector(`#slide-${this.slideIndex-1}`).classList.add("activeSlide");
+
+    removeUnnecessaryAttr(thumbnailSlideBody);
 
     // appending on list
-
     thumbnail.appendChild(thumbnailSlideBody);
-    this.presentationData.push(thumbnailSlideBody);
   }
 
 
@@ -265,10 +265,15 @@ class App {
         position: "absolute",
         height: DEFAULT_ELEMENT_HEIGHT + "px",
         width: "95%",
+        backgroundColor: "rgb(72, 180, 239)",
         fontSize: document.querySelector("#fontSize").value
       }
     }
-    new Element(params).init();
+    let newElem = new Element(params).init();
+    let cloneElem = newElem.cloneNode(true);
+    let activeThumb = document.querySelector(".thumbnail.active .main-content");
+
+    activeThumb.appendChild(cloneElem);
   }
 
   /**
@@ -284,6 +289,7 @@ class App {
     let previousSibling = thumbnail.previousSibling;
 
     let activeSlide = document.querySelector(".slide.activeSlide");
+
     let activeSlideIndex = activeSlide.querySelector(".slide-body").getAttribute("dataslideindex");
 
     if (nextSibling) {
@@ -299,9 +305,72 @@ class App {
 
     this.slideData = this.slideData.filter(d => parseInt(d.elemTitle.slideIndex) !== parseInt(activeSlideIndex));
 
+    this.slides = this.slides.filter(slide => slide.slideIndex !== parseInt(activeSlideIndex));
+
     thumbnail.parentElement.removeChild(thumbnail);
     activeSlide.parentElement.removeChild(activeSlide);
+
   }
+
+  presentationModeHandler = () => {
+
+    this.slides.forEach(slide => {
+      let presentationBody = slide.slideBody.cloneNode(true);
+      let mainContent = presentationBody.querySelector(".main-content");
+      mainContent.style.height = screen.height - TITLE_CONTAINER_MIN_HEIGHT - GAP_BETWEEN_ELEMENT - 80 + "px"; // 40+ 40 top down padding
+
+      removeUnnecessaryAttr(presentationBody);
+
+      this.presentationData.push(presentationBody);
+    });
+
+    this.isFullScreen = true;
+    let presentationBodyWrapper = createElementAndAppend({
+      parentElem: this.container,
+      attr: {
+        class: "fullscreen"
+      },
+      style: {
+        width: "100vw",
+        height: "100vh",
+        position: "relative"
+      }
+    })
+
+    let presentationSlides = createElementAndAppend({
+      parentElem: presentationBodyWrapper,
+      attr: {
+        class: "presentation-slide"
+      },
+      style: {
+        height: "100vh",
+        position: "absolute",
+        width: this.presentationData.length * 100 + "vw"
+      }
+    });
+
+    this.presentationData.forEach(slideBody => {
+      slideBody.style.float = "left";
+      slideBody.style.width = "100vw";
+      slideBody.style.height = '100vh'
+      presentationSlides.appendChild(slideBody);
+    });
+
+    presentationBodyWrapper.requestFullscreen();
+
+    document.addEventListener('fullscreenchange', () => {
+
+      let fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+      if (!fullscreenElement) {
+        this.presentationData = [];
+        presentationBodyWrapper && presentationBodyWrapper.parentElement && presentationBodyWrapper.parentElement.removeChild(presentationBodyWrapper);
+        this.isFullscreen = false;
+      }
+
+    });
+
+  }
+
 }
 
 
