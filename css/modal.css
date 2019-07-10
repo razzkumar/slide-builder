@@ -1,0 +1,83 @@
+.modal-body-container {
+  padding: 0 15px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-body-container .img-wrapper {
+  float: left;
+  width: 22.5%;
+  height: 150px;
+  padding: 1.22%;
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.img-wrapper img:hover {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15), 0 3px 4px rgba(0, 0, 0, 0.13);
+}
+
+.modal-content h2 {
+  text-align: center;
+  padding: 10px;
+  text-decoration: underline;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 3% auto 15% auto;
+  border: 1px solid #888;
+  width: 70%;
+}
+
+
+.close {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+  color: #000;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+.uploader {
+  padding: 20px;
+  margin: 10px 0;
+  width: 250px;
+  float: none;
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  background-color: gray;
+  color: #fff;
+}
+
+.uploader span {
+  margin: 0 10px;
+}
+
+.modal-body {
+  height: 70vh;
+  overflow: hidden;
+  overflow-y: auto;
+
+}

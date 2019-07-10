@@ -1,19 +1,24 @@
-window.addEventListener("click", ({
-  target
-}) => {
+window.addEventListener("click", (e) => {
   let dropdownElem = document.querySelector(".show");
-  if (!target.classList.contains("btn") && dropdownElem) {
+  if (!e.target.classList.contains("btn") && dropdownElem) {
     dropdownElem.classList.remove("show");
   }
+
+  let modal = document.querySelector('#modal');
+
+  if (e.target == modal) {
+    modal.style.display = "none";
+  }
+
 })
 
 // Global events that delete selected 
 let counter = 0;
 window.addEventListener("keydown", e => {
-
-  if (e.key === "Delete" && e.ctrlKey) {
-    let activeElem = document.querySelector("[datatoolbaractive = 'true']").parentElement;
-    activeElem.parentNode.removeChild(activeElem);
+  let activeElem = document.querySelector("[datatoolbaractive = 'true']");
+  if (e.key === "Delete" && activeElem) {
+    let deleteAbleElem = activeElem.parentElement;
+    deleteAbleElem.parentNode.removeChild(deleteAbleElem);
   }
 
   let presentationSideWrapper = document.querySelector(".fullscreen .presentation-slide");

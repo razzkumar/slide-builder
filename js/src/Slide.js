@@ -10,27 +10,33 @@ class Slide {
     this.slideData = params.slideData;
     this.exportedData = params.exportedData;
     this.elementCount = 1;
+    this.theme = params.theme;
+    this.themeColor = params.themeColor;
   }
-
   init() {
+
     let slide = createElementAndAppend({
       parentElem: this.container,
       attr: {
         class: this.slideIndex === 1 ? "slide activeSlide" : "slide",
-        id: `slide-${this.slideIndex}`
+        id: `slide-${this.slideIndex}`,
       }
     });
 
     let contentWrapperHeight = this.container.offsetHeight - COMMENT_CONTAINER_HEIGHT - 22; // 10+10 top and down margin
 
+    let bgImg = this.exportedData && this.exportedData.theme ? this.exportedData.theme : this.theme;
+
     this.slideBody = createElementAndAppend({
       parentElem: slide,
       attr: {
         class: "slide-body",
-        dataSlideIndex: this.slideIndex
+        dataSlideIndex: this.slideIndex,
       },
       style: {
-        height: contentWrapperHeight + "px"
+        height: contentWrapperHeight + "px",
+        background: `url(${bgImg}) no-repeat`,
+        backgroundSize: "100% 100%",
       }
     });
 
@@ -75,9 +81,11 @@ class Slide {
       }
 
     } else {
-      // UserNote
+      this.slideData[this.slideIndex - 1][`theme`] = this.theme;
+      this.slideData[this.slideIndex - 1][`themeColor`] = this.themeColor;
 
       this.slideData[this.slideIndex - 1][`elemUserNote`] = {};
+      // UserNote
       new Element({
         elemType: "div",
         slideIndex: this.slideIndex,
@@ -93,8 +101,8 @@ class Slide {
           contenteditable: true,
         },
         style: {
-          height: COMMENT_CONTAINER_HEIGHT + "px",
-          fontSize: "24px"
+          height: COMMENT_CONTAINER_HEIGHT - 10 + "px",
+          marginTop: "10px"
         },
       }).init();
 
@@ -130,6 +138,7 @@ class Slide {
 
       this.slideData[this.slideIndex - 1][`elemTitle`]["style"] = {
         fontSize: "48px",
+        height: TITLE_CONTAINER_MIN_HEIGHT + "px",
         minHeight: TITLE_CONTAINER_MIN_HEIGHT + "px",
         padding: "10px"
       };
@@ -177,6 +186,7 @@ class Slide {
     }
 
     new Element(commonParameters).init();
+
     this.elementCount++;
 
   }

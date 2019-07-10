@@ -71,7 +71,6 @@ const createElementAndAppend = ({
 
 const updatePosition = (element, type) => {
 
-
   if (type === "drag") {
 
     let parentX = 0;

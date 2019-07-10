@@ -8,8 +8,9 @@ class Header {
    * Get the Header container element to append the header
    * @param  {HTML Element} container HTML element in which header will be appended
    */
-  constructor(container) {
+  constructor(container, fileName) {
     this.container = container;
+    this.fileName = fileName
   }
   /**
    * A function which initilize the Header
@@ -32,7 +33,7 @@ class Header {
       attr: {
         class: "brand",
       },
-      innerHTML: `<h1><a href='/'>${BRAND_NAME}</a></h1>`
+      innerHTML: `<h1><a href='/'>${this.fileName}</a></h1>`
     });
     // ul of toolbar
 
@@ -290,7 +291,7 @@ class Header {
     });
 
     // TODO
-    let theme = createElementAndAppend({
+    this.theme = createElementAndAppend({
       parentElem: ul,
       elemType: "button",
       attr: {

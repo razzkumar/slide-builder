@@ -27,6 +27,8 @@ class Element {
     elemId,
     attr,
     style,
+    alt,
+    src,
     createNewElement
   }) {
 
@@ -39,13 +41,17 @@ class Element {
     if (createNewElement) {
 
       this.slideData[slideIndex - 1][`elem${elemId}`]["elemId"] = elemId;
-
       this.slideData[slideIndex - 1][`elem${elemId}`]["slideIndex"] = slideIndex;
 
       if (attr) {
         this.slideData[slideIndex - 1][`elem${elemId}`]["attr"] = attr;
       } else if (elemType) {
         this.slideData[slideIndex - 1][`elem${elemId}`]["elemType"] = elemType;
+      }
+
+      if (src) {
+        this.slideData[slideIndex - 1][`elem${elemId}`]["src"] = src;
+        this.slideData[slideIndex - 1][`elem${elemId}`]["alt"] = alt;
       }
     }
 
@@ -68,19 +74,21 @@ class Element {
       });
 
     } else {
+
       let upperElement = document.querySelector(`#slide${slideIndex}Element${elemId-1}Container`);
 
       let top = upperElement ? parseInt(upperElement.style.height) * (elemId - 1) + (GAP_BETWEEN_ELEMENT / 2) * (elemId) : GAP_BETWEEN_ELEMENT / 2;
 
-      // placing element in random place after place is occupied
-
-      if (style && (top + parseInt(style.height)) >= parseInt(this.parentElem.style.height)) {
-
-        top = randomNumber(DEFAULT_ELEMENT_HEIGHT, parseInt(this.parentElem.style.height) - style.height);
-        style.backgroundColor = "#aef";
-        style.width = randomNumber(50, 90) + "%";
+      top = createNewElement ? `${top}px` : style.top
+      // placing element in random place after place is occupie
+      if ((parseInt(top) + DEFAULT_ELEMENT_HEIGHT) >= parseInt(this.parentElem.style.height)) {
+        top = GAP_BETWEEN_ELEMENT * elemId + "px";
       }
 
+      this.slideData[this.slideIndex - 1][`elem${this.elemId}`].style = {
+        ...style,
+        top
+      };
       this.resizableContainer = createElementAndAppend({
         parentElem: this.parentElem,
         attr: {
@@ -88,20 +96,20 @@ class Element {
         },
         style: {
           ...style,
-          top: createNewElement && !style && !style.top ? `${top}px` : style.top
+          top,
         }
       });
 
       attr = elemType === "img" ? {
-        src: "../../img/jungle.jpg",
+        src,
         id: `slide${slideIndex}Element${elemId}`,
         contenteditable: true,
-        alt: `slide ${slideIndex} Element ${elemId} image `
+        alt: `${alt} - slide ${slideIndex} Element ${elemId} image `
       } : {
         contenteditable: true,
         id: `slide${slideIndex}Element${elemId}`,
         placeholder: "Please start writing..."
-      }
+      };
 
       this.element = createElementAndAppend({
         innerHTML,
@@ -217,9 +225,6 @@ class Element {
 
       this.slideData[this.slideIndex - 1][`elem${this.elemId}`]["innerHTML"] = this.element.innerHTML;
 
-      console.log('this.slideDat:', this.slideData);
-
-      this.updateStyleData();
     }, true);
 
     return this.resizableContainer;

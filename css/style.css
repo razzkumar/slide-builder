@@ -87,6 +87,7 @@
   border-radius: 15px;
   font-size: 9px;
   visibility: hidden;
+  z-index: 5;
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.3s, transform 0.2s;
@@ -116,6 +117,51 @@
   cursor: pointer;
   position: relative;
 }
+
+.slide {
+  border: 1px solid gray;
+  padding: 10px;
+  height: 100%;
+  display: none;
+}
+
+.slide-body {
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.4);
+}
+
+.slide.activeSlide {
+  display: block;
+}
+
+.main-content {
+  padding: 10px;
+  position: relative;
+  box-sizing: border-box;
+
+}
+
+div[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block;
+  color: #fff;
+}
+
+div.title[contenteditable=true]:empty:before {
+  color: gray;
+}
+
+div[contenteditable=true] {
+  border: 1px dashed #AAA;
+  width: 100%;
+  padding: 5px;
+  height: 100%;
+}
+
+div[contenteditable="true"]:hover {
+  background-color: rgba(217, 245, 255, 0.5);
+}
+
+/* Thumbnail style */
 
 .thumbnail {
   height: 18vh;
@@ -157,50 +203,36 @@
 .thumbnail .delete:hover::after {
   opacity: 1;
   visibility: visible;
-  transform: translateY(-10px)
+  transform: translateY(-10px);
 }
 
-
-.slide {
-  border: 1px solid gray;
-  padding: 10px;
-  height: 100%;
-  display: none;
-}
-
-.slide-body {
-  border: 1px solid black;
-}
-
-.slide.activeSlide {
-  display: block;
-}
-
-.main-content {
-  padding: 10px;
-  position: relative;
-  box-sizing: border-box;
-}
-
-div[contenteditable=true]:empty:before {
-  content: attr(placeholder);
-  display: block;
+.add {
+  position: fixed;
+  width: 25px;
+  height: 25px;
+  bottom: 30px;
+  left: 18.229166666666666%;
+  line-height: 26px;
+  background-color: #0C9;
   color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
 }
 
-div.title[contenteditable=true]:empty:before {
-  color: gray;
+/* styling scrollbar  */
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-div[contenteditable=true] {
-  border: 1px dashed #AAA;
-  width: 100%;
-  padding: 5px;
-  height: 100%;
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
 }
 
-div[contenteditable="true"]:hover {
-  background-color: rgba(217, 245, 255, 0.5);
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .show {
@@ -244,4 +276,14 @@ input[type="file"] {
   display: inline-block;
   padding: 0 6px;
   cursor: pointer;
+}
+
+@media (max-width:768px) {
+  .add {
+    left: 15.229166666666666%;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+  }
+
 }

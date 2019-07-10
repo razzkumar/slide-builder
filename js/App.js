@@ -19,13 +19,19 @@ class App {
     this.slideData = [];
     this.presentationData = [];
     this.isFullScreen = false;
+    this.theme = "img/theme/theme-white-blue-bg.jpg";
+    this.themeColor = "#000";
   }
   /**
    * Initilize the application
    */
   init() {
 
-    this.header = new Header(this.container).init();
+    this.header = new Header(this.container, BRAND_NAME).init();
+    this.imgModal = new Modal(this.container, "Image").init();
+    this.themeModal = new Modal(this.container, "Theme").init();
+    this.presentatioMode = new PresentationMode(this.container);
+
     this.slideMainContainer = createElementAndAppend({
       parentElem: this.container,
       attr: {
@@ -68,49 +74,82 @@ class App {
 
     //Insert new image
     this.header.insertImage.addEventListener("click", (e) => {
-      this.makeNewElement("img");
+      this.imgModal.modalWrapper.style.display = "block"
       this.header.handleDropdownMenu("hide");
     })
+    // Creating element
+    this.imgModal.modalWrapper.addEventListener("click", event => {
+      let elem = event.target;
+      if (elem.tagName === "IMG") {
+        let src = elem.getAttribute("src");
+        let alt = elem.getAttribute("alt");
+        this.makeNewElement("img", src, alt);
+        this.imgModal.modalWrapper.style.display = "none";
+      } else {
+        this.imgModal.modalWrapper.style.display = "none"
+      }
+    });
 
-    //Insert new video
-    this.header.insertVideo.addEventListener("click", e => {
-      this.makeNewElement("video");
+    // INSERT THEAME
+    this.header.theme.addEventListener("click", e => {
+      this.themeModal.modalWrapper.style.display = "block";
       this.header.handleDropdownMenu("hide");
-    })
+    });
 
-    // // Loading exported data
-    // if (DATA && DATA.length) {
-    //   DATA && DATA.map((data, i) => {
+    this.themeModal.modalWrapper.addEventListener("click", event => {
 
-    //     this.slideData[i] = {
-    //       ...data
-    //     };
+      let elem = event.target;
+      if (elem.tagName === "IMG") {
 
-    //     this.makeNewSlide(data);
-    //   })
-    // } else {
-    //   // new slide
-    //   this.makeNewSlide();
-    // }
+        let src = elem.getAttribute("src");
+        this.theme = src;
+        let alt = elem.getAttribute("alt");
+
+        let slideBodies = document.querySelectorAll(".slide-body");
+        slideBodies && slideBodies.length && slideBodies.forEach(elem => {
+          elem.setAttribute("alt", `${alt} theme`)
+          elem.style.background = `url(${src}) no-repeat`;
+          elem.style.backgroundSize = "100% 100%";
+        });
+
+        this.themeModal.modalWrapper.style.display = "none";
+      } else {
+        this.themeModal.modalWrapper.style.display = "none";
+      }
+
+    });
 
     // handle presentation mode
-    this.header.playBtn.addEventListener("click", this.presentationModeHandler.bind(this));
+    this.header.playBtn.addEventListener("click", () => {
+      this.presentatioMode.init(this.slides);
+    });
 
     // Exporting data
     this.header.exportSlides.addEventListener("click", () => {
-      exportToJsonFile(this.slideData, "Slide-data");
+
+      this.header.handleDropdownMenu("hide");
+
+      let fileName = prompt("If You want to export data \n Please enter FileName name", "Slide-data");
+
+      if (fileName != null) {
+        exportToJsonFile(this.slideData, fileName);
+      }
     });
 
     // Importing slides
-
     this.header.importSlides.addEventListener("change", (e) => {
       let jsonData = e.target.files[0];
+      fetch("../data/slide-data.json").then(d => d.json()).then(DATA => {
+        DATA && DATA.map((data, i) => {
 
-      fetch(jsonData)
-        .then(response => response.json())
-        .then(json => console.log(json));
+          this.slideData[i] = {
+            ...data
+          };
+
+          this.makeNewSlide(data);
+        })
+      })
     });
-
     this.makeNewSlide();
   }
 
@@ -132,7 +171,6 @@ class App {
   }
 
 
-
   /**
    * A funtion to create new slide if "data" is passed exiting slide will be created 
    * otherwise it create the empty slide
@@ -141,16 +179,19 @@ class App {
   makeNewSlide(data) {
 
     if (!data) {
-
       this.slideData[this.slideIndex - 1] = {};
     }
+
     this.newSlide = new Slide({
       container: this.slideWrapper,
       toolbar: this.header,
       slideIndex: this.slideIndex,
       slideData: this.slideData,
-      exportedData: data
+      exportedData: data,
+      theme: this.theme,
+      themeColor: this.themeColor
     }).init();
+
     this.slideIndex++;
     this.slides.push(this.newSlide);
 
@@ -164,7 +205,6 @@ class App {
    */
 
   makeSlideList() {
-
     // Cloning thumbnailSlideBody for list
     let thumbnailSlideBody = this.newSlide.slideBody.cloneNode(true);
 
@@ -192,7 +232,7 @@ class App {
       }
     });
 
-    //Creating delete botton
+    // delete botton
     let deleteBtn = createElementAndAppend({
       parentElem: thumbnail,
       elemType: "i",
@@ -204,7 +244,23 @@ class App {
         right: "8px",
         top: "4px",
         lineHeight: "20px",
+        zIndex: "5"
       }
+    });
+
+    // Create new slide floating button
+
+    let createSlide = createElementAndAppend({
+      parentElem: this.slideList,
+      elemType: "i",
+      attr: {
+        class: "fa fa-plus add"
+      }
+    });
+
+    // Add event listener to create new slide
+    createSlide.addEventListener("click", (e) => {
+      this.makeNewSlide();
     })
 
     // Delete event and event handler is on util.js 
@@ -231,7 +287,6 @@ class App {
     document.querySelector(`#slide-${this.slideIndex-1}`).classList.add("activeSlide");
 
     removeUnnecessaryAttr(thumbnailSlideBody);
-
     // appending on list
     thumbnail.appendChild(thumbnailSlideBody);
   }
@@ -241,7 +296,7 @@ class App {
    * A function which handle the creatation of new element on the active slide on click 
    * @param  {String} [elemType] Type of element  
    */
-  makeNewElement(elemType) {
+  makeNewElement(elemType, src, alt) {
 
     let activeSlide = document.querySelector(".activeSlide");
     let slideIndex = parseInt(activeSlide.querySelector(".slide-body").getAttribute("dataslideindex"));
@@ -257,6 +312,8 @@ class App {
       parentElem: mainContent,
       elemId,
       createNewElement: true,
+      src,
+      alt,
       style: elemType === "img" ? {
         position: "absolute",
         height: "300px",
@@ -311,68 +368,7 @@ class App {
     activeSlide.parentElement.removeChild(activeSlide);
 
   }
-
-  presentationModeHandler = () => {
-
-    this.slides.forEach(slide => {
-      let presentationBody = slide.slideBody.cloneNode(true);
-      let mainContent = presentationBody.querySelector(".main-content");
-      mainContent.style.height = screen.height - TITLE_CONTAINER_MIN_HEIGHT - GAP_BETWEEN_ELEMENT - 80 + "px"; // 40+ 40 top down padding
-
-      removeUnnecessaryAttr(presentationBody);
-
-      this.presentationData.push(presentationBody);
-    });
-
-    this.isFullScreen = true;
-    let presentationBodyWrapper = createElementAndAppend({
-      parentElem: this.container,
-      attr: {
-        class: "fullscreen"
-      },
-      style: {
-        width: "100vw",
-        height: "100vh",
-        position: "relative"
-      }
-    })
-
-    let presentationSlides = createElementAndAppend({
-      parentElem: presentationBodyWrapper,
-      attr: {
-        class: "presentation-slide"
-      },
-      style: {
-        height: "100vh",
-        position: "absolute",
-        width: this.presentationData.length * 100 + "vw"
-      }
-    });
-
-    this.presentationData.forEach(slideBody => {
-      slideBody.style.float = "left";
-      slideBody.style.width = "100vw";
-      slideBody.style.height = '100vh'
-      presentationSlides.appendChild(slideBody);
-    });
-
-    presentationBodyWrapper.requestFullscreen();
-
-    document.addEventListener('fullscreenchange', () => {
-
-      let fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
-      if (!fullscreenElement) {
-        this.presentationData = [];
-        presentationBodyWrapper && presentationBodyWrapper.parentElement && presentationBodyWrapper.parentElement.removeChild(presentationBodyWrapper);
-        this.isFullscreen = false;
-      }
-
-    });
-
-  }
-
 }
-
 
 new App({
   containerId: "app"
