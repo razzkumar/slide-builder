@@ -57,6 +57,26 @@ class App {
 
     window.addEventListener("resize", this.styleContainers.bind(this));
 
+    // Create new slide floating button
+    // take a buttom right position of list container and substract 35 to fix position here
+    let listContainerBottom = this.slideList.getBoundingClientRect().bottom;
+    let listContainerRight = this.slideList.getBoundingClientRect().right;
+    let createSlide = createElementAndAppend({
+      parentElem: this.container,
+      elemType: "i",
+      attr: {
+        class: "fa fa-plus add"
+      },
+      style: {
+        left: (listContainerRight - 35) + "px",
+        top: (listContainerBottom - 35) + "px"
+      }
+    });
+
+    // Add event listener to create new slide
+    createSlide.addEventListener("click", (e) => {
+      this.makeNewSlide();
+    })
     // TODO
     // Create notification container 
 
@@ -116,7 +136,6 @@ class App {
       } else {
         this.themeModal.modalWrapper.style.display = "none";
       }
-
     });
 
     // handle presentation mode
@@ -168,6 +187,14 @@ class App {
       sBody.querySelector(".main-content").style.height = sbHeight - TITLE_CONTAINER_MIN_HEIGHT + "px"
     })
 
+    // restylying create slide floating btn
+    let floatBtn = document.querySelector(".add");
+    if (floatBtn) {
+      let listContainerBottom = this.slideList.getBoundingClientRect().bottom;
+      let listContainerRight = this.slideList.getBoundingClientRect().right;
+      floatBtn.style.left = (listContainerRight - 35) + "px"; // 35 is magic number which only work here to position btn 
+      floatBtn.style.top = (listContainerBottom - 35) + "px";
+    }
   }
 
 
@@ -237,31 +264,9 @@ class App {
       parentElem: thumbnail,
       elemType: "i",
       attr: {
-        class: "fa fa-remove delete"
-      },
-      style: {
-        position: "absolute",
-        right: "8px",
-        top: "4px",
-        lineHeight: "20px",
-        zIndex: "5"
+        class: this.slides.length <= 1 ? "fa fa-remove single delete" : "fa fa-remove delete"
       }
     });
-
-    // Create new slide floating button
-
-    let createSlide = createElementAndAppend({
-      parentElem: this.slideList,
-      elemType: "i",
-      attr: {
-        class: "fa fa-plus add"
-      }
-    });
-
-    // Add event listener to create new slide
-    createSlide.addEventListener("click", (e) => {
-      this.makeNewSlide();
-    })
 
     // Delete event and event handler is on util.js 
     deleteBtn.addEventListener("click", this.deleteSlide)
@@ -335,12 +340,15 @@ class App {
 
   /**
    * A callback function that handle the delete slide
-   * @param  {Event} {currentTarget}  Destructuring and geting currentTarget from event
+   * @param  {Event} e  Destructuring and geting currentTarget from event
    */
-  deleteSlide = ({
-    currentTarget
-  }) => {
-    let thumbnail = currentTarget.parentElement;
+  deleteSlide = (e) => {
+
+    // if only one slide avoid delete
+    if (this.slides.length === 1) return;
+
+
+    let thumbnail = e.currentTarget.parentElement;
 
     let nextSibling = thumbnail.nextSibling;
     let previousSibling = thumbnail.previousSibling;
@@ -349,7 +357,7 @@ class App {
 
     let activeSlideIndex = activeSlide.querySelector(".slide-body").getAttribute("dataslideindex");
 
-    if (nextSibling) {
+    if (nextSibling && nextSibling.tagName !== "I") {
       nextSibling.classList.add("active");
       activeSlide.nextSibling.classList.add("activeSlide");
     } else if (previousSibling) {

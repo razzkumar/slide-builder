@@ -144,27 +144,27 @@ const updatePosition = (element, type) => {
   } else if (type === "resize") {
 
     // resize 
-    let original_width = 0;
-    let original_height = 0;
-    let original_mouse_x = 0;
-    let original_mouse_y = 0;
+    let originalWidth = 0;
+    let originalHeight = 0;
+    let originalMouseX = 0;
+    let originalMouseY = 0;
 
     const resizer = element.querySelector('.resizer');
 
     resizer && resizer.addEventListener('mousedown', function (e) {
       e.preventDefault();
-      original_width = element.getBoundingClientRect().width;
-      original_height = element.getBoundingClientRect().height;
-      original_mouse_x = e.pageX;
-      original_mouse_y = e.pageY;
+      originalWidth = element.getBoundingClientRect().width;
+      originalHeight = element.getBoundingClientRect().height;
+      originalMouseX = e.pageX;
+      originalMouseY = e.pageY;
       window.addEventListener('mousemove', resize);
       window.addEventListener('mouseup', stopResize);
     })
 
     function resize(e) {
 
-      let width = original_width + (e.pageX - original_mouse_x);
-      let height = original_height + (e.pageY - original_mouse_y);
+      let width = originalWidth + (e.pageX - originalMouseX);
+      let height = originalHeight + (e.pageY - originalMouseY);
 
       // convert to percentage
       let widthPercentage = (width * 100) / element.parentElement.getBoundingClientRect().width + '%'

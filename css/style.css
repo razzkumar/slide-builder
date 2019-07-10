@@ -129,6 +129,11 @@
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.4);
 }
 
+.slide-wrapper .slide-body {
+  max-width: 1052px;
+  margin: 0 auto;
+}
+
 .slide.activeSlide {
   display: block;
 }
@@ -175,6 +180,10 @@ div[contenteditable="true"]:hover {
   display: none;
 }
 
+.thumbnail .delete.single {
+  display: none !important;
+}
+
 .thumbnail:hover {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15), 0 3px 4px rgba(0, 0, 0, 0.13);
 }
@@ -185,25 +194,18 @@ div[contenteditable="true"]:hover {
 
 .thumbnail.active .delete {
   display: inline;
-}
-
-.thumbnail .delete::after {
-  content: "Delete";
   position: absolute;
-  right: -10px;
-  top: -10px;
-  visibility: hidden;
-  opacity: 0;
-  color: #e44;
-  transform: translateY(10px);
-  transition: opacity 0.3s,
-    transform 0.2s;
-}
-
-.thumbnail .delete:hover::after {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(-10px);
+  right: -4px;
+  top: -5px;
+  height: 14px;
+  width: 14px;
+  border: 0.5px solid;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 14px;
+  font-size: 12px;
+  z-index: 5;
+  color: red;
 }
 
 .add {
