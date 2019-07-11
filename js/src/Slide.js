@@ -167,8 +167,7 @@ class Slide {
           height: DEFAULT_ELEMENT_HEIGHT + "px",
           width: "95%",
           maxWidth: "100%",
-          color: "#fff",
-          backgroundColor: "rgb(72, 180, 239)",
+          color: this.themeColor,
           fontSize: document.querySelector("#fontSize").value
         }
       });
@@ -179,12 +178,12 @@ class Slide {
   createElement(commonParameters) {
 
     if (!this.exportedData) {
+
       this.slideData[this.slideIndex - 1][`elem${this.elementCount}`] = {};
 
       this.slideData[this.slideIndex - 1][`elem${this.elementCount}`]["style"] = commonParameters.style;
 
     }
-
     new Element(commonParameters).init();
 
     this.elementCount++;

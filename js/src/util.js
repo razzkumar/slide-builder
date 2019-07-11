@@ -15,7 +15,6 @@ const styleElement = (elem, style) => {
   }
 }
 
-
 /**
  * A function to append attributes on the  HTML element
  * @param  {*} elem  HTML element in which attributes are applied
@@ -36,10 +35,10 @@ const addAttributes = (elem, attrs) => {
  * A function to create HTML element and apply style as well as add the attributes
  * 
  * @param  {*} {parentElem  HTML element in which new HTML element is appended
- * @param  {*} elemType [n="div"] Type of element to create
+ * @param  {*} [elemType="div"] Type of element to create
  * @param  {*} attr attributes of the element 
- * @param  {*} innerText [n] Content of element  
- * @param  {*} innerHTML [n] Content of element
+ * @param  {*} [innerText] Content of element  
+ * @param  {*} [innerHTML] Content of element
  * @param  {*} style} Style of the element is to be added with valid css property
  */
 const createElementAndAppend = ({
@@ -185,9 +184,7 @@ const updatePosition = (element, type) => {
     function stopResize() {
       window.removeEventListener('mousemove', resize)
     }
-
   }
-
 }
 /**
  * A funtion that takes inline style and convert to js Object style
@@ -265,5 +262,10 @@ const removeUnnecessaryAttr = (elem) => {
   allContentEditAble.forEach(el => {
     el.removeAttribute("contenteditable");
   });
-
 }
+
+/**
+ * A function that returen user name
+ * @param  {*} email custom email made for this app
+ */
+const getUsernameFromEmail = email => email.split("-")[0];

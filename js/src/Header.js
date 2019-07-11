@@ -8,6 +8,7 @@ class Header {
    * Get the Header container element to append the header
    * @param  {HTML Element} container HTML element in which header will be appended
    */
+
   constructor(container, fileName) {
     this.container = container;
     this.fileName = fileName
@@ -21,7 +22,6 @@ class Header {
     this.headerContainer = document.createElement("div");
 
     this.headerContainer.classList.add("header", "container", "clearfix");
-
 
     // Appending this.headerContainer on root
     this.container.appendChild(this.headerContainer);
@@ -72,8 +72,8 @@ class Header {
 
     this.createNewSlideBtn = createElementAndAppend({
       parentElem: fileDropDownlist,
-      elemType: "span",
-      innerText: "New Slide",
+      elemType: "button",
+      innerHTML: '<i class="fa fa-plus"></i><span>New Slide</span>',
     });
 
 
@@ -89,7 +89,7 @@ class Header {
         class: "import-file",
         for: "importJson"
       },
-      innerHTML: '<i class="fa fa-download"><span>Import</span>'
+      innerHTML: '<i class="fa fa-download"></i><span>Import</span>'
     })
     this.importSlides = createElementAndAppend({
       parentElem: importSlideWrapper,
@@ -104,8 +104,7 @@ class Header {
 
     this.exportSlides = createElementAndAppend({
       parentElem: fileDropDownlist,
-      elemType: "div",
-      attr: null,
+      elemType: "button",
       innerHTML: '<i class="fa fa-upload"></i> <span>Export</span>'
     });
 
@@ -137,24 +136,24 @@ class Header {
     });
 
     this.insertElement = createElementAndAppend({
+      elemType: "button",
       parentElem: insertDropDownlist,
       innerHTML: '<i class="fa fa-text-width"></i> <span>New Text</span>'
     });
 
     this.insertImage = createElementAndAppend({
       parentElem: insertDropDownlist,
-      elemType: "div",
+      elemType: "button",
       innerHTML: '<i class="fa fa-image"></i> <span>Image</span>'
     });
 
-    this.insertVideo = createElementAndAppend({
-      parentElem: insertDropDownlist,
-      elemType: "div",
-      innerHTML: '<i class="fa fa-video-camera"></i> <span>Video</span>'
-    });
+    // this.insertVideo = createElementAndAppend({
+    //   parentElem: insertDropDownlist,
+    //   elemType: "button",
+    //   innerHTML: '<i class="fa fa-video-camera"></i> <span>Video</span>'
+    // });
 
     // adding fontFamily selection
-
     let liOfFontFamilySelect = createElementAndAppend({
       parentElem: ul,
       elemType: "li",
@@ -223,7 +222,6 @@ class Header {
       }
     });
 
-
     // -------------------Text align element container-----------------------
 
     this.liOfTextAllign = createElementAndAppend({
@@ -283,7 +281,9 @@ class Header {
     });
 
     backgroundColor.addEventListener("change", (e) => {
+
       let lastFcused = document.querySelector("[dataToolbarActive='true']");
+
       if (lastFcused) {
         lastFcused.style.backgroundColor = e.target.value;
         lastFcused.focus();
@@ -308,6 +308,21 @@ class Header {
         class: "btn"
       },
       innerHTML: "<i class='fa fa-play'></i>&nbsp; Play",
+      style: {
+        float: "right",
+        padding: "5px 20px",
+        width: "100px",
+        textAllign: "center"
+      }
+    });
+
+    this.saveBtn = createElementAndAppend({
+      parentElem: this.headerContainer,
+      elemType: "button",
+      attr: {
+        class: "btn"
+      },
+      innerHTML: "<i class='fa fa-save'></i>&nbsp; Save",
       style: {
         float: "right",
         padding: "5px 20px",
@@ -381,7 +396,6 @@ class Header {
   handleDropdownMenu(e) {
 
     let activeDropdown = document.querySelector(".show");
-
     //hide the dropdown menu
     let nextSibling = e && e.target && e.target.nextSibling;
     if (activeDropdown !== nextSibling || e === "hide") {

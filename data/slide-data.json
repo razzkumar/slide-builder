@@ -28,23 +28,28 @@
       "fontSize": "48px",
       "height": "80px",
       "minHeight": "80px",
-      "padding": "10px"
-    }
+      "maxHeight": "240px",
+      "paddingTop": "10px",
+      "paddingRight": "10px",
+      "paddingBottom": "10px",
+      "paddingLeft": "10px"
+    },
+    "innerHTML": "one"
   },
   "elem1": {
     "style": {
+      "fontSize": "22px",
       "position": "absolute",
       "top": "10px",
       "minHeight": "30px",
       "height": "70px",
       "width": "95%",
       "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
+      "color": "rgb(0, 0, 0)"
     },
     "elemId": 1,
-    "slideIndex": 1
+    "slideIndex": 1,
+    "innerHTML": "one"
   }
 }, {
   "theme": "img/theme/theme-white-blue-bg.jpg",
@@ -59,8 +64,10 @@
       "contenteditable": true
     },
     "style": {
-      "height": "70px"
-    }
+      "height": "60px",
+      "marginTop": "10px"
+    },
+    "innerHTML": "NOTE : two"
   },
   "elemTitle": {
     "elemId": "Title",
@@ -76,23 +83,41 @@
       "fontSize": "48px",
       "height": "80px",
       "minHeight": "80px",
-      "padding": "10px"
-    }
+      "maxHeight": "240px",
+      "paddingTop": "10px",
+      "paddingRight": "10px",
+      "paddingBottom": "10px",
+      "paddingLeft": "10px"
+    },
+    "innerHTML": "two"
   },
   "elem1": {
     "style": {
+      "fontSize": "22px",
       "position": "absolute",
       "top": "10px",
       "minHeight": "30px",
       "height": "70px",
       "width": "95%",
       "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
+      "color": "rgb(0, 0, 0)"
     },
     "elemId": 1,
-    "slideIndex": 2
+    "slideIndex": 2,
+    "innerHTML": "two"
+  },
+  "elem2": {
+    "elemId": 2,
+    "slideIndex": 2,
+    "elemType": "img",
+    "src": "img/mountain.jpg",
+    "alt": "image4",
+    "style": {
+      "position": "absolute",
+      "height": "300px",
+      "width": "50%",
+      "top": "90px"
+    }
   }
 }, {
   "theme": "img/theme/theme-white-blue-bg.jpg",
@@ -107,7 +132,8 @@
       "contenteditable": true
     },
     "style": {
-      "height": "70px"
+      "height": "60px",
+      "marginTop": "10px"
     }
   },
   "elemTitle": {
@@ -124,20 +150,24 @@
       "fontSize": "48px",
       "height": "80px",
       "minHeight": "80px",
-      "padding": "10px"
-    }
+      "maxHeight": "240px",
+      "paddingTop": "10px",
+      "paddingRight": "10px",
+      "paddingBottom": "10px",
+      "paddingLeft": "10px"
+    },
+    "innerHTML": "three"
   },
   "elem1": {
     "style": {
+      "fontSize": "22px",
       "position": "absolute",
       "top": "10px",
       "minHeight": "30px",
       "height": "70px",
       "width": "95%",
       "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
+      "color": "rgb(0, 0, 0)"
     },
     "elemId": 1,
     "slideIndex": 3
@@ -155,7 +185,8 @@
       "contenteditable": true
     },
     "style": {
-      "height": "70px"
+      "height": "60px",
+      "marginTop": "10px"
     }
   },
   "elemTitle": {
@@ -183,8 +214,7 @@
       "height": "70px",
       "width": "95%",
       "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
+      "color": "#000",
       "fontSize": "16"
     },
     "elemId": 1,
@@ -220,454 +250,41 @@
       "fontSize": "48px",
       "height": "80px",
       "minHeight": "80px",
-      "padding": "10px"
-    }
+      "maxHeight": "240px",
+      "paddingTop": "10px",
+      "paddingRight": "10px",
+      "paddingBottom": "10px",
+      "paddingLeft": "10px"
+    },
+    "innerHTML": "this is slide 1"
   },
   "elem1": {
     "style": {
+      "fontSize": "22px",
       "position": "absolute",
       "top": "10px",
       "minHeight": "30px",
       "height": "70px",
       "width": "95%",
       "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
+      "color": "rgb(0, 0, 0)"
     },
     "elemId": 1,
-    "slideIndex": 5
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 6,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide6ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
+    "slideIndex": 5,
+    "innerHTML": "this is element 1"
   },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 6,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide6ElementTitle",
-      "placeholder": "Enter Title of slide 6 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
+  "elem2": {
+    "elemId": 2,
+    "slideIndex": 5,
+    "elemType": "img",
+    "src": "img/dandd.png",
+    "alt": "image 2",
     "style": {
       "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 6
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 7,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide7ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
+      "height": "300px",
+      "width": "50%",
+      "top": "35.7143%",
+      "left": "48.7643%"
     }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 7,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide7ElementTitle",
-      "placeholder": "Enter Title of slide 7 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 7
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 8,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide8ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 8,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide8ElementTitle",
-      "placeholder": "Enter Title of slide 8 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 8
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 9,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide9ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 9,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide9ElementTitle",
-      "placeholder": "Enter Title of slide 9 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 9
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 10,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide10ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 10,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide10ElementTitle",
-      "placeholder": "Enter Title of slide 10 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 10
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 11,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide11ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 11,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide11ElementTitle",
-      "placeholder": "Enter Title of slide 11 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 11
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 12,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide12ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 12,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide12ElementTitle",
-      "placeholder": "Enter Title of slide 12 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 12
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 13,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide13ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 13,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide13ElementTitle",
-      "placeholder": "Enter Title of slide 13 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 13
-  }
-}, {
-  "theme": "img/theme/theme-white-blue-bg.jpg",
-  "themeColor": "#000",
-  "elemUserNote": {
-    "elemId": "UserNote",
-    "slideIndex": 14,
-    "attr": {
-      "class": "user-note",
-      "title": "Note of the Slide",
-      "id": "slide14ElementUserNote",
-      "contenteditable": true
-    },
-    "style": {
-      "height": "70px"
-    }
-  },
-  "elemTitle": {
-    "elemId": "Title",
-    "slideIndex": 14,
-    "attr": {
-      "class": "title",
-      "title": "Title of the Slide",
-      "contenteditable": true,
-      "id": "slide14ElementTitle",
-      "placeholder": "Enter Title of slide 14 here..."
-    },
-    "style": {
-      "fontSize": "48px",
-      "height": "80px",
-      "minHeight": "80px",
-      "padding": "10px"
-    }
-  },
-  "elem1": {
-    "style": {
-      "position": "absolute",
-      "top": "10px",
-      "minHeight": "30px",
-      "height": "70px",
-      "width": "95%",
-      "maxWidth": "100%",
-      "color": "#fff",
-      "backgroundColor": "rgb(72, 180, 239)",
-      "fontSize": "16"
-    },
-    "elemId": 1,
-    "slideIndex": 14
   }
 }]
