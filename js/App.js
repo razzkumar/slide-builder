@@ -28,13 +28,17 @@ class App {
 
     // checking user is logged in or not
     firebase.auth().onAuthStateChanged(user => {
-
       if (user) {
         this.loader.hide();
         this.landingPage && this.landingPage.landingWrapper && this.landingPage.landingWrapper.parentElement.removeChild(this.landingPage.landingWrapper);
-        this.slideBuilder = new SlideBuilder(this.container, this.loader, this.notifier);
+        this.header = new Header(this.container, BRAND_NAME).init();
+        this.slideBuilder = new SlideBuilder(this.container, this.loader, this.notifier, this.header);
         this.slideBuilder.init();
 
+        this.header.logoutBtn.addEventListener("click", (e) => {
+          firebase.auth().signOut();
+          window.location.reload();
+        })
       } else {
         this.loader.hide();
         this.landingPage = new LandingPage(this.container).init();
@@ -46,8 +50,9 @@ class App {
           this.username = e.target.value;
         });
 
-        this.landingPage.loginBtn.addEventListener("click", (e) => {
+        this.landingPage.loginForm.addEventListener("submit", (e) => {
 
+          e.preventDefault();
           // Formating user info for login 
           let name = this.username && this.username.split(" ").join("")
           let userEmail = `${name}-2019@slidebuilder.com`;
@@ -65,7 +70,8 @@ class App {
           });
         });
 
-        this.landingPage.signUpBtn.addEventListener("click", (e) => {
+        this.landingPage.signUpForm.addEventListener("submit", (e) => {
+
           e.preventDefault();
 
           // Creating fake user email and password

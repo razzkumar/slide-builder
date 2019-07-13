@@ -24,17 +24,14 @@ class LandingPage {
       parentElem: tabGroup,
       elemType: "li",
       attr: {
-        class: "tab active"
+        class: "active"
       },
-      innerHTML: '<a href="#signup">Sign Up</a>'
+      innerHTML: '<a href="#signup">Register</a>'
     });
 
     this.logInTabBtn = createElementAndAppend({
       parentElem: tabGroup,
       elemType: "li",
-      attr: {
-        class: "tab"
-      },
       innerHTML: '<a href="#login">Login</a>'
     });
 
@@ -50,17 +47,16 @@ class LandingPage {
       document.querySelector("#signup").style.display = "block";
     });
 
+
     this.logInTabBtn.addEventListener("click", (e) => {
 
       e.preventDefault();
 
       e.currentTarget.classList.add("active");
-      e.currentTarget.previousSibling.classList.remove("active");
 
+      e.currentTarget.previousSibling.classList.remove("active")
       document.querySelector("#signup").style.display = "none";
-
       document.querySelector("#signup input").value = "";
-
       document.querySelector("#login").style.display = "block";
     });
 
@@ -80,8 +76,9 @@ class LandingPage {
       innerHTML: '<h1>Sign Up for Free</h1>'
     });
 
-    let signUpInputFieldWrapper = createElementAndAppend({
+    this.signUpForm = createElementAndAppend({
       parentElem: signUpWrapper,
+      elemType: "form",
       attr: {
         class: "field-wrap"
       },
@@ -89,7 +86,7 @@ class LandingPage {
     });
 
     this.signUpInput = createElementAndAppend({
-      parentElem: signUpInputFieldWrapper,
+      parentElem: this.signUpForm,
       elemType: "input",
       attr: {
         type: "text",
@@ -100,10 +97,12 @@ class LandingPage {
     })
 
     this.signUpBtn = createElementAndAppend({
-      parentElem: signUpWrapper,
-      elemType: "button",
-      innerText: "Get Started",
+      parentElem: this.signUpForm,
+      elemType: "input",
       attr: {
+        type: "submit",
+        value: "Get Started",
+        name: "signup",
         class: "button"
       }
     });
@@ -119,8 +118,9 @@ class LandingPage {
       innerHTML: '<h1>Please Enter Your User name</h1>'
     });
 
-    let inputFieldWrapper = createElementAndAppend({
+    this.loginForm = createElementAndAppend({
       parentElem: logInWrapper,
+      elemType: 'form',
       attr: {
         class: "field-wrap"
       },
@@ -128,7 +128,7 @@ class LandingPage {
     });
 
     this.loginInput = createElementAndAppend({
-      parentElem: inputFieldWrapper,
+      parentElem: this.loginForm,
       elemType: "input",
       attr: {
         type: "text",
@@ -138,11 +138,14 @@ class LandingPage {
       }
     });
 
-    this.loginBtn = createElementAndAppend({
-      parentElem: logInWrapper,
-      elemType: "button",
-      innerText: "Log In",
+    // loginBtn
+    createElementAndAppend({
+      parentElem: this.loginForm,
+      elemType: "input",
       attr: {
+        type: "submit",
+        value: "Log In",
+        name: "login",
         class: "button"
       }
     });

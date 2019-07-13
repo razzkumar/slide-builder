@@ -1,3 +1,130 @@
+/* Landing page */
+.landing-page {
+  background: rgba(33, 167, 220, 0.7);
+  max-width: 500px;
+  margin: 100px auto;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+}
+
+.tab-group {
+  list-style: none;
+  margin-bottom: 40px;
+}
+
+.tab-group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.tab-group li a {
+  display: block;
+  text-decoration: none;
+  padding: 15px;
+  font-size: 20px;
+  float: left;
+  width: 50%;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.5s ease;
+  background: rgba(33, 167, 220);
+}
+
+.tab-group li:hover {
+  background: rgba(33, 167, 220, 0.7);
+  color: #ffffff;
+}
+
+.tab-group .active a {
+  background: #64c1e6;
+  color: #ffffff;
+}
+
+.tab-content {
+  padding: 10px 80px;
+}
+
+.tab-content>div:last-child {
+  display: none;
+}
+
+.landing-page h1 {
+  text-align: center;
+  color: #ffffff;
+  font-weight: 300;
+  font-size: 25px;
+  margin-bottom: 40px;
+}
+
+.landing-page label {
+  font-size: 22px;
+  padding: 10px 0;
+  color: #fff;
+}
+
+.landing-page input {
+  font-size: 22px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 5px 10px;
+  background: none;
+  background-image: none;
+  border: 1px solid #000;
+  color: #ffffff;
+  margin: 10px 0;
+  border-radius: 0;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.landing-page input:focus {
+  outline: 0;
+  border-color: #fff;
+}
+
+.field-wrap {
+  margin-bottom: 40px;
+}
+
+input.button {
+  margin-top: 50px;
+  padding: 15px 0;
+  font-size: 2rem;
+  text-transform: uppercase;
+  background: #21A7DC;
+  color: #ffffff;
+  display: block;
+  width: 100%;
+}
+
+.button:hover,
+.button:focus {
+  cursor: pointer;
+  background: #81f7d7;
+}
+
+/* Landing page end */
+
+/* Loading page style */
+.loading {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: rgba(33, 167, 220, 0.2);
+  text-align: center;
+}
+
+.loading img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Loading page style end */
+
+
 .header {
   padding: 10px 0;
 }
@@ -32,8 +159,15 @@
 .btn:hover {
   border: 1px solid gray;
   color: #FFF;
-  background-color: green;
+  background-color: #21A7DC;
   border-radius: 5px;
+}
+
+.btn.btn-delete {
+  display: block;
+  background-color: #21A7DC;
+  position: absolute;
+  bottom: 5px
 }
 
 .dropdown-list {
@@ -133,18 +267,14 @@
 
 .slide {
   border: 1px solid gray;
-  padding: 10px;
+  padding-top: 20px;
   height: 100%;
   display: none;
 }
 
-.slide-body {
-  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.4);
-}
-
 .slide-wrapper .slide-body {
-  max-width: 1052px;
-  margin: 0 auto;
+  margin: 0 8%;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.4);
 }
 
 .slide.activeSlide {
@@ -164,9 +294,6 @@ div[contenteditable=true]:empty:before {
   color: #000;
 }
 
-div.title[contenteditable=true]:empty:before {
-  color: gray;
-}
 
 div[contenteditable=true] {
   border: 1px dashed #AAA;
@@ -175,8 +302,13 @@ div[contenteditable=true] {
   height: 100%;
 }
 
+div.title[contenteditable=true],
+div.user-note[contenteditable=true] {
+  border: 1px solid rgb(33, 167, 220);
+}
+
 div[contenteditable="true"]:hover {
-  background-color: rgba(217, 245, 255, 0.5);
+  background-color: rgba(33, 167, 220, 0.5);
 }
 
 /* Thumbnail style */
@@ -209,16 +341,16 @@ div[contenteditable="true"]:hover {
   display: inline;
   position: absolute;
   right: -4px;
-  top: -5px;
-  height: 14px;
-  width: 14px;
+  padding: 3px;
   border: 0.5px solid;
   border-radius: 50%;
   text-align: center;
-  line-height: 14px;
-  font-size: 12px;
+  line-height: 11px;
+  font-size: 13px;
+  cursor: pointer;
   z-index: 5;
-  color: red;
+  color: #fff;
+  background-color: red;
 }
 
 .add {
@@ -227,7 +359,7 @@ div[contenteditable="true"]:hover {
   height: 25px;
   bottom: 30px;
   line-height: 26px;
-  background-color: #0C9;
+  background-color: #21A7DC;
   color: #fff;
   border-radius: 50%;
   text-align: center;
@@ -305,6 +437,7 @@ input[type="file"] {
   font-size: 16px;
   text-transform: capitalize;
   position: absolute;
+  z-index: 10;
   transition: right 0.15s;
 
 }
@@ -323,6 +456,10 @@ input[type="file"] {
 }
 
 @media (max-width:768px) {
+  .slide-wrapper .slide-body {
+    margin: 0 2%;
+  }
+
   .add {
     width: 15px;
     height: 15px;

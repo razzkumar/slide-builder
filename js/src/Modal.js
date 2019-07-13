@@ -77,6 +77,12 @@ class Modal {
       this.addImage("img/theme/theme-white-blue-bg.jpg", "white-blue");
     };
 
+    // adding THEME
+    if (this.type === "Presentation") {
+      this.listProject();
+    };
+
+
     //uploader
     let uploadWrapper = createElementAndAppend({
       parentElem: modalBodyContainer,
@@ -108,7 +114,39 @@ class Modal {
     this.uploader.addEventListener("change", (e) => {
       console.log("change")
     })
+
     return this;
+  }
+
+  listProject() {
+
+    let presentationListWrapper = createElementAndAppend({
+      parentElem: this.modalBody,
+      attr: {
+        class: "presentation-wrapper  clearfix"
+      }
+    })
+
+    let presentations = window.localStorage.getItem("presentations");
+    if (presentations) {
+      let data = JSON.parse(presentations);
+
+      data && data.forEach(d => {
+
+        createElementAndAppend({
+          parentElem: presentationListWrapper,
+          attr: {
+            class: 'img-wrapper',
+            ["data-title"]: d.name
+          },
+          innerHTML: `<h3 data-title="${d.name}">title: ${d.name}</h3>
+                      <date data-title="${d.name}">Created On:${d.createdOn}</date>
+                      <button class="btn btn-delete">Delete</button>
+                      `
+        });
+      });
+
+    }
   }
 
   addImage(src, title) {
@@ -119,6 +157,5 @@ class Modal {
       },
       innerHTML: `<img src=${src} alt="${title}" />`
     })
-
   }
 }

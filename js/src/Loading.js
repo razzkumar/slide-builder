@@ -10,7 +10,7 @@ class Loading {
     });
   }
   show() {
-    this.loadingWrapper.style.display = "block"
+    this.loadingWrapper.style.display = "block";
   }
   hide() {
     this.loadingWrapper.style.display = "none";

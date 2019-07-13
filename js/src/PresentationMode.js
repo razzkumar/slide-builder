@@ -49,10 +49,22 @@ class PresentationMode {
       presentationSlides.appendChild(slideBody);
     });
 
-    presentationBodyWrapper.requestFullscreen();
+    // Make Fullscreen
+    if (presentationBodyWrapper.requestFullscreen) {
+      presentationBodyWrapper.requestFullscreen();
+    } else if (presentationBodyWrapper.webkitRequestFullscreen) {
+      console.log("Chrome Fullscreen");
+      presentationBodyWrapper.webkitRequestFullscreen();
+    } else if (presentationBodyWrapper.mozRequestFullScreen) {
+      console.log("Firefox Fullscreen");
+      presentationBodyWrapper.mozRequestFullScreen();
+    } else if (presentationBodyWrapper.msRequestFullscreen) {
+      console.log("MS Fullscreen");
+      presentationBodyWrapper.msRequestFullscreen();
+    }
+
 
     document.addEventListener('fullscreenchange', () => {
-
       let fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
       if (!fullscreenElement) {
         this.presentationData = [];

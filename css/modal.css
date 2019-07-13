@@ -5,7 +5,7 @@
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   left: 0;
   top: 0;
   width: 100%;
@@ -13,11 +13,28 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-body-container .img-wrapper {
-  float: left;
-  width: 22.5%;
+.modal-body-container .img-wrapper,
+.modal-body-container .presentation-wrapper {
   height: 150px;
+}
+
+.presentation-wrapper h3 {
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.presentation-wrapper date {
+  font-size: 10px;
+}
+
+.modal-body-container .img-wrapper {
+  background-color: rgba(33, 167, 220, 0.3);
+  float: left;
+  position: relative;
   padding: 1.22%;
+  margin: 0 5px;
+  width: 22.5%;
 }
 
 .img-wrapper img {
@@ -26,9 +43,11 @@
   cursor: pointer;
 }
 
-.img-wrapper img:hover {
+
+.img-wrapper:hover {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15), 0 3px 4px rgba(0, 0, 0, 0.13);
 }
+
 
 .modal-content h2 {
   text-align: center;

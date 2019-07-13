@@ -4,17 +4,17 @@
  * new SlideBuilder(container).init();
  */
 
-class SlideBuilder extends ProjectList {
+class SlideBuilder {
 
   /**
    * @param {*} container Id of the container whare app is created 
    */
 
-  constructor(container, loader, notifier) {
-    super(container)
+  constructor(container, loader, notifier, header) {
     this.container = container;
     this.loader = loader;
-    this.notifier = notifier
+    this.notifier = notifier;
+    this.header = header;
     this.slides = [];
     this.slideIndex = 1;
     this.slideData = [];
@@ -32,10 +32,9 @@ class SlideBuilder extends ProjectList {
     this.username = this.username ? this.username : getUsernameFromEmail(firebase.auth().currentUser.email);
 
     // this.listSlides();
-
-    this.header = new Header(this.container, BRAND_NAME).init();
     this.imgModal = new Modal(this.container, "Image").init();
     this.themeModal = new Modal(this.container, "Theme").init();
+    this.listOfPresentation = new Modal(this.container, "Presentation").init();
 
     this.presentatioMode = new PresentationMode(this.container);
 
@@ -68,8 +67,9 @@ class SlideBuilder extends ProjectList {
     // take a buttom right position of list container and substract 35 to fix position here
     let listContainerBottom = this.slideList.getBoundingClientRect().bottom;
     let listContainerRight = this.slideList.getBoundingClientRect().right;
+
     let createSlide = createElementAndAppend({
-      parentElem: this.container,
+      parentElem: this.slideMainContainer,
       elemType: "i",
       attr: {
         class: "fa fa-plus add"
@@ -116,6 +116,7 @@ class SlideBuilder extends ProjectList {
       }
     });
 
+
     // INSERT THEAME
     this.header.theme.addEventListener("click", e => {
       this.themeModal.modalWrapper.style.display = "block";
@@ -152,20 +153,43 @@ class SlideBuilder extends ProjectList {
       }
     });
 
+    // Open saved presetations
+    this.header.openPresentations.addEventListener("click", e => {
+      this.listOfPresentation.modalWrapper.style.display = "block";
+      this.header.handleDropdownMenu("hide");
+    });
+
+
+    // Opening saved file from firebase
+    this.listOfPresentation.modalWrapper.addEventListener("click", event => {
+      let elemTitle = event.target.dataset.title;
+      let data = window.localStorage.getItem("presentations");
+      data = JSON.parse(data)
+
+      let selectedData = data && data.filter(d => d.name === elemTitle);
+
+      if (selectedData && selectedData.length) {
+
+        this.slideImpoter(selectedData[0].slides)
+        this.listOfPresentation.modalWrapper.style.display = "none";
+        console.log('this.listOfPresentation:', this.listOfPresentation)
+
+      } else {
+        this.listOfPresentation.modalWrapper.style.display = "none"
+      }
+    });
+
+
     // handle presentation mode
     this.header.playBtn.addEventListener("click", () => {
-
       this.presentatioMode.init(this.slides);
-
     });
 
     // Exporting data
     this.header.exportSlides.addEventListener("click", () => {
 
       this.header.handleDropdownMenu("hide");
-
       let fileName = prompt("If You want to export data \n Please enter FileName name", "Slide-data");
-
       if (fileName != null) {
         // utils
         exportToJsonFile(this.slideData, fileName);
@@ -178,21 +202,35 @@ class SlideBuilder extends ProjectList {
     this.header.saveBtn.addEventListener("click", (e) => {
       this.loader.show();
       let fileName = prompt("If You want to export data \n Please enter FileName name");
+      if (fileName && fileName.length > 3) {
 
-      if (fileName) {
-        db.collection("slides").add({
-            slides: this.slideData,
-            createdOn: new Date(),
-            name: fileName
-          })
+
+        let data = {
+          slides: this.slideData,
+          createdOn: new Date() + "",
+          name: fileName
+        };
+
+
+        db.collection(`/${this.username}`).add(data)
           .then(docRef => {
             this.loader.hide();
+            // uplodating localdata
+            let storedData = window.localStorage.getItem("slides");
+
+            if (storedData) {
+              storedData = JSON.parse(storedData);
+              storedData = [...storedData, data];
+            }
             this.notifier.init("Slide saved successfully");
           })
           .catch(error => {
             this.notifier.init("Error while saveing data", 3000, "error");
             console.error("Error adding document: ", error);
           });
+      } else {
+        this.loader.hide();
+        console.log("save slide failed");
       }
 
     })
@@ -209,7 +247,6 @@ class SlideBuilder extends ProjectList {
           this.reset();
           let data = JSON.parse(evt.target.result);
 
-          // notifiying
           // create slide from imported data
           this.slideImpoter(data);
         }
@@ -217,8 +254,31 @@ class SlideBuilder extends ProjectList {
       reader.readAsBinaryString(file.slice(0, file.size)); //file slice will change to blob
     });
 
-
     this.makeNewSlide();
+
+    // Storing all data from firebase
+
+    let storedData = window.localStorage.getItem("presentations");
+
+    if (!storedData) {
+      let docRef = db.collection(`/${this.username}`);
+
+      docRef.get().then(querySnapshot => {
+        let data = [];
+
+        querySnapshot.forEach(doc => {
+          console.log('doc:', doc.data());
+          data.push(doc.data());
+        });
+
+        if (data && data.length) {
+          window.localStorage.setItem("presentations", JSON.stringify(data));
+        }
+
+      }).catch(function (error) {
+        console.log("Error getting document:", error);
+      });
+    }
 
     return this;
   }
@@ -226,21 +286,23 @@ class SlideBuilder extends ProjectList {
   // create slide using exported data
 
   slideImpoter(data) {
+    console.log('data:', data)
 
-    this.notifier.init("Successfully file loaded");
     // mapping imported 
-
     if (data && data.length) {
 
       this.reset();
-
       data.forEach((data, i) => {
+        console.log('datasdafsfads:', data)
+
         this.slideData[i] = {
           ...data
         };
+
         this.makeNewSlide(data);
       });
     }
+    this.notifier.init("Successfully file loaded");
   }
 
   reset() {
@@ -277,14 +339,15 @@ class SlideBuilder extends ProjectList {
   styleContainers() {
 
     let headerHeight = parseInt(this.header.headerContainer.offsetHeight);
-    let height = parseInt(screen.availHeight) - headerHeight - GAP_BETWEEN_ELEMENT - COMMENT_CONTAINER_HEIGHT;
+
+    let height = parseInt(screen.availHeight) - headerHeight - GAP_BETWEEN_ELEMENT * 4;
 
     this.slideMainContainer.style.height = `${height}px`;
     this.slideWrapper.style.height = `${height}px`;
 
     let slideBodies = document.querySelectorAll(".slide .slide-body");
     slideBodies && slideBodies.length > 0 && slideBodies.forEach(sBody => {
-      let sbHeight = height - COMMENT_CONTAINER_HEIGHT - GAP_BETWEEN_ELEMENT
+      let sbHeight = height - COMMENT_CONTAINER_HEIGHT - GAP_BETWEEN_ELEMENT;
       sBody.style.height = sbHeight + "px";
       sBody.querySelector(".main-content").style.height = sbHeight - TITLE_CONTAINER_MIN_HEIGHT + "px"
     })
@@ -376,9 +439,7 @@ class SlideBuilder extends ProjectList {
     thumbnailSlideBody.addEventListener("click", (e) => {
 
       let id = e.currentTarget.getAttribute("dataslideindex");
-
       activeThumb = document.querySelector(".thumbnail.active");
-
       activeThumb && activeThumb.classList.remove("active");
       thumbnail.classList.add("active");
 
@@ -459,15 +520,13 @@ class SlideBuilder extends ProjectList {
 
     let single = document.querySelector(".single");
     single && single.classList.remove("single");
+
     let nextSibling = thumbnail.nextSibling;
-
     let previousSibling = thumbnail.previousSibling;
-
     let activeSlide = document.querySelector(".slide.activeSlide");
-
     let activeSlideIndex = activeSlide.querySelector(".slide-body").getAttribute("dataslideindex");
 
-    this.notifier.init(`slide ${activeSlideIndex} successfully deleted`)
+    this.notifier.init(`slide successfully deleted`)
 
     if (nextSibling) {
       nextSibling.classList.add("active");

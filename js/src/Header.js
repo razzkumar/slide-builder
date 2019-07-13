@@ -70,6 +70,12 @@ class Header {
       }
     });
 
+    this.openPresentations = createElementAndAppend({
+      parentElem: fileDropDownlist,
+      elemType: "button",
+      innerHTML: '<i class="fa fa-open"></i><span>Open</span>',
+    });
+
     this.createNewSlideBtn = createElementAndAppend({
       parentElem: fileDropDownlist,
       elemType: "button",
@@ -290,7 +296,6 @@ class Header {
       }
     });
 
-    // TODO
     this.theme = createElementAndAppend({
       parentElem: ul,
       elemType: "button",
@@ -300,36 +305,64 @@ class Header {
       innerText: "Theme",
     });
 
+    let rightSection = createElementAndAppend({
+      parentElem: this.headerContainer,
+      attr: {
+        class: "right-btns clearfix"
+      },
+      style: {
+        float: "right"
+      }
+    })
+
     // play btn
     this.playBtn = createElementAndAppend({
-      parentElem: this.headerContainer,
+      parentElem: rightSection,
       elemType: "button",
       attr: {
         class: "btn"
       },
       innerHTML: "<i class='fa fa-play'></i>&nbsp; Play",
       style: {
-        float: "right",
-        padding: "5px 20px",
-        width: "100px",
+        float: "left",
+        padding: "5px 10px",
+        width: "60px",
         textAllign: "center"
       }
     });
 
+    // Save to firebase btn
     this.saveBtn = createElementAndAppend({
-      parentElem: this.headerContainer,
+      parentElem: rightSection,
       elemType: "button",
       attr: {
         class: "btn"
       },
       innerHTML: "<i class='fa fa-save'></i>&nbsp; Save",
       style: {
-        float: "right",
-        padding: "5px 20px",
-        width: "100px",
+        float: "left",
+        padding: "5px 10px",
+        width: "60px",
         textAllign: "center"
       }
     });
+
+    this.logoutBtn = createElementAndAppend({
+      parentElem: rightSection,
+      elemType: "button",
+      attr: {
+        class: "btn"
+      },
+      innerHTML: "<i class='fa fa-sign-out'></i>&nbsp; Logout",
+      style: {
+        float: "left",
+        padding: "5px 10px",
+        width: "60px",
+        textAllign: "center"
+      }
+    });
+
+
 
     return this;
   }

@@ -101,8 +101,8 @@ class Slide {
           contenteditable: true,
         },
         style: {
-          height: COMMENT_CONTAINER_HEIGHT - 10 + "px",
-          marginTop: "10px"
+          height: COMMENT_CONTAINER_HEIGHT - GAP_BETWEEN_ELEMENT + "px",
+          marginTop: "20px"
         },
       }).init();
 
