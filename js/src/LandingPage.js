@@ -53,7 +53,6 @@ class LandingPage {
       e.preventDefault();
 
       e.currentTarget.classList.add("active");
-
       e.currentTarget.previousSibling.classList.remove("active")
       document.querySelector("#signup").style.display = "none";
       document.querySelector("#signup input").value = "";

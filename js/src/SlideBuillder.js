@@ -1,5 +1,5 @@
 /**
- * Class which is Entry point of the application 
+ * Class which create the slides 
  * @example 
  * new SlideBuilder(container).init();
  */
@@ -7,14 +7,15 @@
 class SlideBuilder {
 
   /**
+   * 
    * @param {*} container Id of the container whare app is created 
+   * @param {*} loader loding 
+   * @param {*} notifier shows notification
    */
-
-  constructor(container, loader, notifier, header) {
+  constructor(container, loader, notifier) {
     this.container = container;
     this.loader = loader;
     this.notifier = notifier;
-    this.header = header;
     this.slides = [];
     this.slideIndex = 1;
     this.slideData = [];
@@ -24,17 +25,17 @@ class SlideBuilder {
   }
 
   /**
-   * Initilize the application
+   * Initilize the Slide builder
    */
 
   init() {
 
     this.username = this.username ? this.username : getUsernameFromEmail(firebase.auth().currentUser.email);
 
-    // this.listSlides();
+    this.header = new Header(this.container, BRAND_NAME).init();
     this.imgModal = new Modal(this.container, "Image").init();
     this.themeModal = new Modal(this.container, "Theme").init();
-    this.listOfPresentation = new Modal(this.container, "Presentation").init();
+    this.listOfPresentationModal = new Modal(this.container, "Presentation").init();
 
     this.presentatioMode = new PresentationMode(this.container);
 
@@ -65,6 +66,7 @@ class SlideBuilder {
 
     // Create new slide floating button
     // take a buttom right position of list container and substract 35 to fix position here
+
     let listContainerBottom = this.slideList.getBoundingClientRect().bottom;
     let listContainerRight = this.slideList.getBoundingClientRect().right;
 
@@ -134,6 +136,7 @@ class SlideBuilder {
         } else {
           this.themeColor = "#fff";
         }
+
         let alt = elem.getAttribute("alt");
         let slideBodies = document.querySelectorAll(".slide-body");
         slideBodies && slideBodies.length && slideBodies.forEach(elem => {
@@ -142,8 +145,8 @@ class SlideBuilder {
           elem.style.backgroundSize = "100% 100%";
         });
 
+        // applying them to all existing slides
         let elements = document.querySelectorAll('[contenteditable = "true"]');
-
         elements && elements.forEach(elm => {
           elm.style.color = this.themeColor;
         })
@@ -155,35 +158,30 @@ class SlideBuilder {
 
     // Open saved presetations
     this.header.openPresentations.addEventListener("click", e => {
-      this.listOfPresentation.modalWrapper.style.display = "block";
+      this.listOfPresentationModal.modalWrapper.style.display = "block";
+      this.listOfPresentationModal.listProject();
       this.header.handleDropdownMenu("hide");
     });
 
 
     // Opening saved file from firebase
-    this.listOfPresentation.modalWrapper.addEventListener("click", event => {
+    this.listOfPresentationModal.modalWrapper.addEventListener("click", event => {
       let elemTitle = event.target.dataset.title;
       let data = window.localStorage.getItem("presentations");
       data = JSON.parse(data)
 
+
       let selectedData = data && data.filter(d => d.name === elemTitle);
 
       if (selectedData && selectedData.length) {
-
         this.slideImpoter(selectedData[0].slides)
-        this.listOfPresentation.modalWrapper.style.display = "none";
-        console.log('this.listOfPresentation:', this.listOfPresentation)
-
+        this.listOfPresentationModal.modalWrapper.style.display = "none";
       } else {
-        this.listOfPresentation.modalWrapper.style.display = "none"
+        this.listOfPresentationModal.modalWrapper.style.display = "none"
       }
     });
 
 
-    // handle presentation mode
-    this.header.playBtn.addEventListener("click", () => {
-      this.presentatioMode.init(this.slides);
-    });
 
     // Exporting data
     this.header.exportSlides.addEventListener("click", () => {
@@ -204,7 +202,6 @@ class SlideBuilder {
       let fileName = prompt("If You want to export data \n Please enter FileName name");
       if (fileName && fileName.length > 3) {
 
-
         let data = {
           slides: this.slideData,
           createdOn: new Date() + "",
@@ -214,6 +211,7 @@ class SlideBuilder {
 
         db.collection(`/${this.username}`).add(data)
           .then(docRef => {
+
             this.loader.hide();
             // uplodating localdata
             let storedData = window.localStorage.getItem("slides");
@@ -221,6 +219,7 @@ class SlideBuilder {
             if (storedData) {
               storedData = JSON.parse(storedData);
               storedData = [...storedData, data];
+              window.localStorage.setItem("presentations", storedData);
             }
             this.notifier.init("Slide saved successfully");
           })
@@ -234,6 +233,11 @@ class SlideBuilder {
       }
 
     })
+
+    // handle presentation mode
+    this.header.playBtn.addEventListener("click", () => {
+      this.presentatioMode.init(this.slides);
+    });
 
     // Importing slides
     this.header.importSlides.addEventListener("change", (e) => {
@@ -267,7 +271,6 @@ class SlideBuilder {
         let data = [];
 
         querySnapshot.forEach(doc => {
-          console.log('doc:', doc.data());
           data.push(doc.data());
         });
 
@@ -280,20 +283,33 @@ class SlideBuilder {
       });
     }
 
+
+
+    this.header.logoutBtn.addEventListener("click", (e) => {
+      firebase.auth().signOut()
+      window.localStorage.removeItem("username");
+      window.localStorage.removeItem("user");
+      window.localStorage.removeItem("presentations");
+      window.location.reload();
+    });
+
     return this;
   }
 
-  // create slide using exported data
+
+  /**
+   * A function that create slide from  exported data
+   * 
+   * @param  {*} data 
+   */
 
   slideImpoter(data) {
-    console.log('data:', data)
 
     // mapping imported 
     if (data && data.length) {
 
       this.reset();
       data.forEach((data, i) => {
-        console.log('datasdafsfads:', data)
 
         this.slideData[i] = {
           ...data
@@ -304,6 +320,10 @@ class SlideBuilder {
     }
     this.notifier.init("Successfully file loaded");
   }
+
+  /**
+   * A function that reset the slide-builder to create new presentation
+   */
 
   reset() {
 
@@ -333,9 +353,12 @@ class SlideBuilder {
     });
 
     this.styleContainers();
-
   }
 
+
+  /**
+   * A function that style containers which is reused while resizing
+   */
   styleContainers() {
 
     let headerHeight = parseInt(this.header.headerContainer.offsetHeight);

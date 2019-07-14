@@ -2,11 +2,22 @@
  * class that represent a single slide
  */
 class Slide {
+
+  /** 
+   * takes a object parameter which contains:
+   * @param {*} container  container div where slide appened 
+  *  @param {*} toolbar header toolbar
+  *  @param {*} slideIndex index of the slide
+  *  @param {*} slideData all 
+  *  @param {*} [exportedData]
+  *  @param {*} theme
+  *  @param {*} themeColor
+   }
+   */
   constructor(params) {
     this.container = params.container;
     this.toolbar = params.toolbar;
     this.slideIndex = params.slideIndex;
-
     this.slideData = params.slideData;
     this.exportedData = params.exportedData;
     this.elementCount = 1;

@@ -120,6 +120,10 @@ class Modal {
 
   listProject() {
 
+    let oldWrapper = document.querySelector(".presentation-wrapper");
+
+    if (oldWrapper) oldWrapper.parentElement.removeChild(oldWrapper);
+
     let presentationListWrapper = createElementAndAppend({
       parentElem: this.modalBody,
       attr: {

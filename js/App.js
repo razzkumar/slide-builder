@@ -1,5 +1,6 @@
 /**
  * Class which is Entry point of the application 
+ * 
  * @example 
  * new App({containerId:"app"}).init();
  */
@@ -7,13 +8,15 @@ class App {
   /**
    * @param {String} containerId Id of the container whare app is created 
    */
+
   constructor(containerId) {
     this.id = containerId;
     this.container = document.querySelector(`#${this.id}`);
     this.username = ""
   }
+
   /**
-   * Initilize the application
+   * Initilize the application which check user login status and render view 
    */
 
   init() {
@@ -30,26 +33,33 @@ class App {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.loader.hide();
-        this.landingPage && this.landingPage.landingWrapper && this.landingPage.landingWrapper.parentElement.removeChild(this.landingPage.landingWrapper);
-        this.header = new Header(this.container, BRAND_NAME).init();
-        this.slideBuilder = new SlideBuilder(this.container, this.loader, this.notifier, this.header);
+
+        if (this.landingPage && this.landingPage.landingWrapper) {
+
+          let landingElemPrent = this.landingPage.landingWrapper.parentElement;
+          landingElemPrent && landingElemPrent.removeChild(this.landingPage.landingWrapper);
+        }
+
+        this.slideBuilder = new SlideBuilder(this.container, this.loader, this.notifier);
         this.slideBuilder.init();
 
-        this.header.logoutBtn.addEventListener("click", (e) => {
-          firebase.auth().signOut();
-          window.location.reload();
-        })
       } else {
+
         this.loader.hide();
+
         this.landingPage = new LandingPage(this.container).init();
 
+        // taking username for login
         this.landingPage.loginInput.addEventListener("input", (e) => {
           this.username = e.target.value;
         });
+
+        // taking username for signup
         this.landingPage.signUpInput.addEventListener("input", (e) => {
           this.username = e.target.value;
         });
 
+        // handle login 
         this.landingPage.loginForm.addEventListener("submit", (e) => {
 
           e.preventDefault();
@@ -64,11 +74,13 @@ class App {
           firebase.auth().signInWithEmailAndPassword(userEmail, password).then(e => {
             // hide loading indicator
             this.loader.hide();
+            this.notifier.init(`User created with username :${this.username}`, 3500);
             this.render();
           }).catch(function (error) {
-            console.log('error.message:', error.message)
+            this.notifier.init(error.message, 3000, "error");
           });
         });
+
 
         this.landingPage.signUpForm.addEventListener("submit", (e) => {
 
@@ -76,9 +88,10 @@ class App {
 
           // Creating fake user email and password
 
-          let name = this.username && this.username.split(" ").join("");
+          let name = this.username && this.username.split(" ").join(""); //removing spaces
           let userEmail = `${name}-2019@slidebuilder.com`;
           let password = `${name}-2019`;
+
           if (name && name.length > 2) {
             this.loader.show();
             firebase.auth().createUserWithEmailAndPassword(userEmail, password).then((e) => {
@@ -88,13 +101,12 @@ class App {
             }).catch(error => {
               if (error.message.search("already") > 1) {
                 this.landingPage.logInTabBtn.click();
+                this.notifier.init("You have already registered <br/> Please login", 3000, "error");
               }
-              console.log(error);
             });
           } else {
-            alert("Plese enter name greater then 3 char ");
+            this.notifier.init("Username must contain at least 3  char", 3000, "error");
           }
-
         });
       }
     });
