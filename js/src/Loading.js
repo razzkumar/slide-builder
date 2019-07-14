@@ -1,12 +1,14 @@
-/*
+/**
  *Class that create a loading effect on the app while app is loading 
  *
  */
 
 class Loading {
-  /*
+
+  /**
    *@param {*} container HTML element where it is appened 
    */
+
   constructor(container) {
     this.container = container
     this.loadingWrapper = createElementAndAppend({
@@ -19,7 +21,7 @@ class Loading {
   }
 
 
-  /**
+  /***
    * A function that display the loading effect on the app
    */
   show() {
@@ -27,7 +29,7 @@ class Loading {
   }
 
 
-  /**
+  /***
    * A function that hide loading effect from the app
    */
   hide() {
