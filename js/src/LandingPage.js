@@ -1,5 +1,11 @@
-class LandingPage {
+/*
+ *A class that create the landing login/signup page of the application
+ */
 
+class LandingPage {
+  /*
+   *@param {*} container  HTML elemet where landing page appended
+   */
   constructor(container) {
     this.container = container;
     this.landingWrapper = createElementAndAppend({
@@ -9,6 +15,10 @@ class LandingPage {
       }
     });
   }
+
+  /* 
+   * A function that initilization the landing page and 
+   */
 
   init() {
 
@@ -151,7 +161,13 @@ class LandingPage {
 
     return this;
   }
+  /* A function that remove the landing page after login success 
+   */
   hide() {
-    this.landingWrapper && this.landingWrapper.parentElement && this.landingWrapper.parentElement.removeChild(this.landingWrapper);
+    if (this.landingWrapper) {
+
+      let parentElem = this.landingWrapper.parentElement;
+      parentElem && parentElem.removeChild(this.landingWrapper);
+    }
   }
 }

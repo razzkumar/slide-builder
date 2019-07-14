@@ -4,6 +4,7 @@
  * @example 
  * new App({containerId:"app"}).init();
  */
+
 class App {
   /**
    * @param {String} containerId Id of the container whare app is created 

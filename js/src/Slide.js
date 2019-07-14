@@ -5,15 +5,16 @@ class Slide {
 
   /** 
    * takes a object parameter which contains:
-   * @param {*} container  container div where slide appened 
-  *  @param {*} toolbar header toolbar
-  *  @param {*} slideIndex index of the slide
-  *  @param {*} slideData all 
-  *  @param {*} [exportedData]
-  *  @param {*} theme
-  *  @param {*} themeColor
-   }
+   * @param {*} {container  container div where slide appened 
+   * @param {*} toolbar header toolbar
+   * @param {*} slideIndex index of the slide
+   * @param {*} slideData all the slide data of the presentation (ie. style, content etc)  
+   * @param {*} [exportedData] The collection of imported data
+   * @param {*} theme  
+   * @param {*} themeColor}
+   * 
    */
+
   constructor(params) {
     this.container = params.container;
     this.toolbar = params.toolbar;
@@ -24,6 +25,12 @@ class Slide {
     this.theme = params.theme;
     this.themeColor = params.themeColor;
   }
+
+  /**
+   *initialize the Slide which setup all a single slide of the presentation
+   */
+
+
   init() {
 
     let slide = createElementAndAppend({
@@ -51,7 +58,7 @@ class Slide {
       }
     });
 
-
+    //If there is exported data then create slide accordingly 
     if (this.exportedData) {
 
       if (this.exportedData.elemTitle) {
@@ -80,6 +87,9 @@ class Slide {
         }
       });
 
+      // As each element of slide are object and identifed by 'elem'+elemCounter, 
+      // retriving those data and creating slides
+
       let elemCount = 1;
       while (this.exportedData[`elem${elemCount}`] && this.exportedData[`elem${elemCount}`].elemId) {
         this.createElement({
@@ -92,10 +102,14 @@ class Slide {
       }
 
     } else {
+
+      // if the imported data is not passed as a parameter create new slide 
+
       this.slideData[this.slideIndex - 1][`theme`] = this.theme;
       this.slideData[this.slideIndex - 1][`themeColor`] = this.themeColor;
 
       this.slideData[this.slideIndex - 1][`elemUserNote`] = {};
+
       // UserNote
       new Element({
         elemType: "div",
@@ -121,6 +135,7 @@ class Slide {
       this.slideData[this.slideIndex - 1][`elemUserNote`]["style"] = {
         height: COMMENT_CONTAINER_HEIGHT + "px"
       };
+
       // Slide title
 
       this.slideData[this.slideIndex - 1][`elemTitle`] = {};
@@ -186,14 +201,16 @@ class Slide {
     return this;
   }
 
+  /**
+   * A funtion that create element on the slide 
+   *
+   * @params {Object} commonParameters attributes and other property of the element 
+   */
   createElement(commonParameters) {
 
     if (!this.exportedData) {
-
       this.slideData[this.slideIndex - 1][`elem${this.elementCount}`] = {};
-
       this.slideData[this.slideIndex - 1][`elem${this.elementCount}`]["style"] = commonParameters.style;
-
     }
     new Element(commonParameters).init();
 

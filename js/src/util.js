@@ -6,6 +6,7 @@
  * @example
  * styleElement(heading,{backgroundColor:"#AAA"})
  */
+
 const styleElement = (elem, style) => {
   let styleKey = style && Object.keys(style);
   if (styleKey && styleKey.length) {
@@ -15,6 +16,7 @@ const styleElement = (elem, style) => {
   }
 }
 
+
 /**
  * A function to append attributes on the  HTML element
  * @param  {*} elem  HTML element in which attributes are applied
@@ -22,6 +24,7 @@ const styleElement = (elem, style) => {
  * @example
  * addAttributes(heading,{class:"heading-container"})
  */
+
 const addAttributes = (elem, attrs) => {
   let attrKeys = attrs && Object.keys(attrs);
   if (attrKeys && attrKeys.length) {
@@ -30,6 +33,7 @@ const addAttributes = (elem, attrs) => {
     })
   }
 }
+
 
 /**
  * A function to create HTML element and apply style as well as add the attributes
@@ -41,6 +45,7 @@ const addAttributes = (elem, attrs) => {
  * @param  {*} [innerHTML] Content of element
  * @param  {*} style} Style of the element is to be added with valid css property
  */
+
 const createElementAndAppend = ({
   parentElem,
   elemType = "div",
@@ -61,6 +66,8 @@ const createElementAndAppend = ({
   parentElem.appendChild(elem);
   return elem;
 }
+
+
 /**
  * A function that helps to change the position of element by draging or resizing 
  * @param  {HTML element} element element in which drag event should fired
@@ -108,10 +115,12 @@ const updatePosition = (element, type) => {
       };
 
     });
-
+	//mouse move handler
     function onMouseMove(event) {
       moveAt(event.clientX, event.clientY);
     }
+
+	  //a function that move the element to desire place
 
     function moveAt(pageX, pageY) {
 
@@ -126,7 +135,7 @@ const updatePosition = (element, type) => {
       element.style.left = leftPercentage;
       element.style.top = topPercentage;
 
-      // updating thumbnail
+      // updating position of thumbnail
       let id = element.getAttribute("id");
 
       let thumbnailElem = document.querySelector(`.thumbnail #${id}`);
@@ -186,6 +195,8 @@ const updatePosition = (element, type) => {
     }
   }
 }
+
+
 /**
  * A funtion that takes inline style and convert to js Object style
  * @param  {Object} style style of element (eg. slide1.style)
@@ -193,6 +204,7 @@ const updatePosition = (element, type) => {
  * @example
  * formatStyleToStore(slide1.style);
  */
+
 const formatStyleToStore = (style) => {
   let styleSheet = {}
   let i = 0;
@@ -209,10 +221,12 @@ const formatStyleToStore = (style) => {
   return styleSheet;
 }
 
+
 /** A function to make camel case to any string
  * @param  {String} str String to be camalize
  * @returns {String} camal case string
  */
+
 const camalize = (str) => {
   return str.replace(/[-,\W]+(.)/g, function (match, chr) {
     return chr.toUpperCase();
@@ -225,6 +239,7 @@ const camalize = (str) => {
  * @param  {Object} jsonData Data is to be exported
  * @param  {String} fileName [n="data.json"] name of the download file 
  */
+
 const exportToJsonFile = (jsonData, fileName) => {
   let dataStr = JSON.stringify(jsonData);
   let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
@@ -237,6 +252,7 @@ const exportToJsonFile = (jsonData, fileName) => {
   linkElement.click();
 }
 
+
 /**
  * A function that generate random number between passed range
  * @param  {Number} min Lower value of the range
@@ -247,10 +263,12 @@ const randomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+
 /**
  * A function that remove the un
  * @param {*} elem 
  */
+
 const removeUnnecessaryAttr = (elem) => {
   let dragger = elem.querySelector(".dragger");
   dragger.parentElement.removeChild(dragger)
@@ -263,6 +281,7 @@ const removeUnnecessaryAttr = (elem) => {
     el.removeAttribute("contenteditable");
   });
 }
+
 
 /**
  * A function that returen user name

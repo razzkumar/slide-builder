@@ -3,16 +3,19 @@
  * @example
  * new Header(parentElem).init()
  */
+
 class Header {
   /**
    * Get the Header container element to append the header
    * @param  {HTML Element} container HTML element in which header will be appended
+   * @param {String} fileName Name/Title of the presentation slide
    */
 
   constructor(container, fileName) {
     this.container = container;
     this.fileName = fileName
   }
+
   /**
    * A function which initilize the Header
    */
@@ -26,7 +29,7 @@ class Header {
     // Appending this.headerContainer on root
     this.container.appendChild(this.headerContainer);
 
-    // Brand 
+    // Brand or fileName
     createElementAndAppend({
       parentElem: this.headerContainer,
       elemType: "div",
@@ -35,8 +38,8 @@ class Header {
       },
       innerHTML: `<h1><a href='/'>${this.fileName}</a></h1>`
     });
-    // ul of toolbar
 
+    // ul of toolbar
     let ul = createElementAndAppend({
       parentElem: this.headerContainer,
       elemType: "ul"
@@ -371,6 +374,7 @@ class Header {
    * A function that handle toolbar related to text alignment and font (i.e text-align,font-size)
    * @param  {Event} e HTML element in which event is triggers 
    */
+
   formatElement(e) {
     let cmd = e.target.getAttribute("dataCmd");
     let cssProperty = e.target.getAttribute("cssProperty");

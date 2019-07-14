@@ -1,11 +1,27 @@
+/**
+ * Class that enable the presentation mode on the slide
+ */
+
 class PresentationMode {
+  /**
+   *@param {*} container 
+   */
+
   constructor(container) {
     this.container = container;
     this.isFullScreen = false;
     this.presentationData = [];
   }
 
+  /**
+   * A function that initilize the presentation mode
+   *
+   * @param {Object} slides list of slide on the presentation
+   */
+
   init(slides) {
+
+    // collecting presentable data/div
 
     slides.forEach(slide => {
       let presentationBody = slide.slideBody.cloneNode(true);

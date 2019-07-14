@@ -1,9 +1,24 @@
+/**
+ * Class that create pop up modal to show the list of (image,theme, slides)
+ */
+
 class Modal {
+
+  /**
+   * @param {*} parentElem HTML Elemet where Modal is appened
+   * @param {String} type type of modal (eg. theme or image)
+   */
+
   constructor(parentElem, type) {
     this.parentElem = parentElem;
     this.type = type;
   }
+  /**
+   *A function that inilization the Modal
+   */
   init() {
+
+    //Creating modal wrapper
 
     this.modalWrapper = createElementAndAppend({
       parentElem: this.parentElem,
@@ -77,13 +92,15 @@ class Modal {
       this.addImage("img/theme/theme-white-blue-bg.jpg", "white-blue");
     };
 
-    // adding THEME
+    // listing previously saved presentation
+
     if (this.type === "Presentation") {
       this.listProject();
     };
 
 
-    //uploader
+    //TODO
+    //upload btn wrapper
     let uploadWrapper = createElementAndAppend({
       parentElem: modalBodyContainer,
       attr: {
@@ -91,7 +108,9 @@ class Modal {
       }
     });
 
-    // label
+
+    // label of upload btn 
+    //
     createElementAndAppend({
       parentElem: uploadWrapper,
       elemType: "label",
@@ -117,6 +136,10 @@ class Modal {
 
     return this;
   }
+
+  /**
+   * A funtion that list the previously stored slides/presentation
+   */
 
   listProject() {
 
@@ -152,6 +175,12 @@ class Modal {
 
     }
   }
+
+  /**
+   * A function that append the image on modal
+   * @param {String} src the source of the image 
+   * @param {Sting} title description of the image 
+   */
 
   addImage(src, title) {
     createElementAndAppend({
