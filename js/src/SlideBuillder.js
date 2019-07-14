@@ -9,12 +9,12 @@ class SlideBuilder {
   /**
    * 
    * @param {*} container Id of the container whare app is created 
-   * @param {*} loader loding 
+   * @param {*} loadingState loding 
    * @param {*} notifier shows notification
    */
-  constructor(container, loader, notifier) {
+  constructor(container, loadingState, notifier) {
     this.container = container;
-    this.loader = loader;
+    this.loadingState = loadingState;
     this.notifier = notifier;
     this.slides = [];
     this.slideIndex = 1;
@@ -30,10 +30,10 @@ class SlideBuilder {
 
   init() {
 
-    this.username = this.username ? this.username : getUsernameFromEmail(firebase.auth().currentUser.email);
+    this.username = this.username ? this.username : window.localStorage.getItem("username");
 
     this.header = new Header(this.container, BRAND_NAME).init();
-    this.imgModal = new Modal(this.container, "Image").init();
+    this.imgModal = new Modal(this.container, "Image", this.loadingState).init();
     this.themeModal = new Modal(this.container, "Theme").init();
     this.listOfPresentationModal = new Modal(this.container, "Presentation").init();
 
@@ -108,13 +108,12 @@ class SlideBuilder {
     // Creating element
     this.imgModal.modalWrapper.addEventListener("click", event => {
       let elem = event.target;
+
       if (elem.tagName === "IMG") {
         let src = elem.getAttribute("src");
         let alt = elem.getAttribute("alt");
         this.makeNewElement("img", src, alt);
         this.imgModal.modalWrapper.style.display = "none";
-      } else {
-        this.imgModal.modalWrapper.style.display = "none"
       }
     });
 
@@ -198,38 +197,39 @@ class SlideBuilder {
     // Save to firebase
 
     this.header.saveBtn.addEventListener("click", (e) => {
-      this.loader.show();
+      this.loadingState.show();
+
       let fileName = prompt("If You want to export data \n Please enter FileName name");
       if (fileName && fileName.length > 3) {
-
         let data = {
           slides: this.slideData,
           createdOn: new Date() + "",
           name: fileName
         };
 
-
         db.collection(`/${this.username}`).add(data)
           .then(docRef => {
 
-            this.loader.hide();
-            // uplodating localdata
-            let storedData = window.localStorage.getItem("slides");
+            this.loadingState.hide();
+            // updating local data
+            let storedData = window.localStorage.getItem("presentations");
 
             if (storedData) {
+
               storedData = JSON.parse(storedData);
               storedData = [...storedData, data];
-              window.localStorage.setItem("presentations", storedData);
+              window.localStorage.setItem("presentations", JSON.stringify(storedData));
             }
+
             this.notifier.init("Slide saved successfully");
+
           })
           .catch(error => {
             this.notifier.init("Error while saveing data", 3000, "error");
             console.error("Error adding document: ", error);
           });
       } else {
-        this.loader.hide();
-        console.log("save slide failed");
+        this.loadingState.hide();
       }
 
     })
@@ -241,13 +241,13 @@ class SlideBuilder {
 
     // Importing slides
     this.header.importSlides.addEventListener("change", (e) => {
-      this.loader.show();
+      this.loadingState.show();
       let file = e.target.files[0];
       let reader = new FileReader();
       // If we use onloadend, we need to check the readyState.
       reader.onloadend = evt => {
         if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-          this.loader.hide();
+          this.loadingState.hide();
           this.reset();
           let data = JSON.parse(evt.target.result);
 
@@ -265,15 +265,13 @@ class SlideBuilder {
     let storedData = window.localStorage.getItem("presentations");
 
     if (!storedData) {
-      let docRef = db.collection(`/${this.username}`);
 
+      let docRef = db.collection(`/${this.username}`);
       docRef.get().then(querySnapshot => {
         let data = [];
-
         querySnapshot.forEach(doc => {
           data.push(doc.data());
         });
-
         if (data && data.length) {
           window.localStorage.setItem("presentations", JSON.stringify(data));
         }
@@ -283,13 +281,11 @@ class SlideBuilder {
       });
     }
 
-
-
     this.header.logoutBtn.addEventListener("click", (e) => {
       firebase.auth().signOut()
       window.localStorage.removeItem("username");
-      window.localStorage.removeItem("user");
       window.localStorage.removeItem("presentations");
+      window.localStorage.removeItem("images");
       window.location.reload();
     });
 

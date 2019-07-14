@@ -9,9 +9,10 @@ class Modal {
    * @param {String} type type of modal (eg. theme or image)
    */
 
-  constructor(parentElem, type) {
+  constructor(parentElem, type, loadingState) {
     this.parentElem = parentElem;
     this.type = type;
+    this.loadingState = loadingState
   }
   /**
    *A function that inilization the Modal
@@ -73,6 +74,7 @@ class Modal {
       }
     });
 
+
     // adding static image
     if (this.type === "Image") {
       this.addImage("img/jungle.jpg", "image 1");
@@ -80,6 +82,105 @@ class Modal {
       this.addImage("img/mountain.jpg", "image4");
       this.addImage("img/websitebuilder.png", "image 3");
       this.addImage("img/dandd.png", "image 2");
+
+      let username = window.localStorage.getItem("username");
+
+      // Getting images
+      let storedimages = window.localStorage.getItem("images");
+      if (!storedimages) {
+
+        let imgDocRef = db.collection(`/images-${username}`);
+        imgDocRef.get().then(querySnapshot => {
+          let img = [];
+          querySnapshot.forEach(doc => {
+            img.push(doc.data());
+          });
+          if (img && img.length) {
+            img.forEach(d => {
+              this.addImage(d.url, d.name);
+            })
+            window.localStorage.setItem("images", JSON.stringify(img));
+          }
+        }).catch(function (error) {
+          console.log("Error getting document:", error);
+        });
+      } else {
+        let data = JSON.parse(storedimages);
+        data && data.forEach(d => {
+          this.addImage(d.url, d.name);
+        })
+      }
+
+      //TODO
+      //upload btn wrapper
+
+      let uploadWrapper = createElementAndAppend({
+        parentElem: modalBodyContainer,
+        attr: {
+          class: "uploader"
+        }
+      });
+
+
+      // label of upload btn 
+      //
+      createElementAndAppend({
+        parentElem: uploadWrapper,
+        elemType: "label",
+        attr: {
+          for: "uploadImg"
+        },
+        innerHTML: '<i class="fa fa-upload"></i><span>Upload Image</span>'
+      });
+
+      this.uploader = createElementAndAppend({
+        parentElem: uploadWrapper,
+        elemType: "input",
+        attr: {
+          type: "file",
+          name: "uploadImg",
+          id: "uploadImg"
+        }
+      });
+
+      this.uploader.addEventListener("change", (e) => {
+        let file = e.target.files[0];
+        if (file) {
+
+          this.loadingState.show();
+          // Create a storage ref
+          let storageRef = firebase.storage().ref(`upload/${username}/` + file.name);
+
+          // Upload file
+          storageRef.put(file).then(snapshot => {
+            let name = snapshot.ref.name;
+
+            snapshot.ref.getDownloadURL().then(downloadURL => {
+
+              let data = {
+                url: downloadURL,
+                name
+              };
+
+              db.collection(`/images-${username}`).add(data)
+                .then(docRef => {
+                  this.loadingState.hide();
+                  let storedimages = window.localStorage.getItem("images");
+                  if (storedimages) {
+                    storedimages = JSON.parse(storedimages);
+                    let newData = [...storedimages, data];
+                    window.localStorage.setItem("images", JSON.stringify(newData));
+                  } else {
+                    window.localStorage.setItem("images", JSON.stringify([data]));
+                  }
+                  this.addImage(downloadURL, name);
+                });
+            });
+          });
+
+        }
+      })
+
     };
 
     // adding THEME
@@ -97,42 +198,6 @@ class Modal {
     if (this.type === "Presentation") {
       this.listProject();
     };
-
-
-    //TODO
-    //upload btn wrapper
-    let uploadWrapper = createElementAndAppend({
-      parentElem: modalBodyContainer,
-      attr: {
-        class: "uploader"
-      }
-    });
-
-
-    // label of upload btn 
-    //
-    createElementAndAppend({
-      parentElem: uploadWrapper,
-      elemType: "label",
-      attr: {
-        for: "uploadImg"
-      },
-      innerHTML: '<i class="fa fa-upload"></i><span>Upload Image</span>'
-    });
-
-    this.uploader = createElementAndAppend({
-      parentElem: uploadWrapper,
-      elemType: "input",
-      attr: {
-        type: "file",
-        name: "uploadImg",
-        id: "uploadImg"
-      }
-    });
-
-    this.uploader.addEventListener("change", (e) => {
-      console.log("change")
-    })
 
     return this;
   }
@@ -171,6 +236,16 @@ class Modal {
                       <button class="btn btn-delete">Delete</button>
                       `
         });
+      });
+    } else {
+
+      createElementAndAppend({
+        parentElem: presentationListWrapper,
+        attr: {
+          class: 'error',
+        },
+        innerHTML: `<h3>You have saved any slides</h3>
+                            `
       });
 
     }

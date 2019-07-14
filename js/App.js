@@ -22,7 +22,7 @@ class App {
 
   init() {
 
-    this.loader = new Loading(this.container);
+    this.loadingState = new Loading(this.container);
     this.notifier = new Notification(this.container);
     this.render();
 
@@ -33,20 +33,21 @@ class App {
     // checking user is logged in or not
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.loader.hide();
-
+        this.username = getUsernameFromEmail(user.email);
+        window.localStorage.setItem("username", this.username);
+        this.loadingState.hide();
         if (this.landingPage && this.landingPage.landingWrapper) {
 
           let landingElemPrent = this.landingPage.landingWrapper.parentElement;
           landingElemPrent && landingElemPrent.removeChild(this.landingPage.landingWrapper);
         }
 
-        this.slideBuilder = new SlideBuilder(this.container, this.loader, this.notifier);
+        this.slideBuilder = new SlideBuilder(this.container, this.loadingState, this.notifier);
         this.slideBuilder.init();
 
       } else {
 
-        this.loader.hide();
+        this.loadingState.hide();
 
         this.landingPage = new LandingPage(this.container).init();
 
@@ -70,15 +71,19 @@ class App {
           let password = `${name}-2019`;
 
           // showing loading page
-          this.loader.show();
+          this.loadingState.show();
 
           firebase.auth().signInWithEmailAndPassword(userEmail, password).then(e => {
             // hide loading indicator
-            this.loader.hide();
-            this.notifier.init(`User created with username :${this.username}`, 3500);
+            window.localStorage.setItem("username", this.username);
+            this.loadingState.hide();
+            this.notifier.init(`Welcome :${this.username}`, 3500);
             this.render();
-          }).catch(function (error) {
-            this.notifier.init(error.message, 3000, "error");
+          }).catch(error => {
+            this.notifier.init(`User ${this.username} is not Registered`, 3000, "error");
+            this.username = "";
+            this.landingPage.hide();
+            this.render();
           });
         });
 
@@ -94,14 +99,16 @@ class App {
           let password = `${name}-2019`;
 
           if (name && name.length > 2) {
-            this.loader.show();
+            this.loadingState.show();
             firebase.auth().createUserWithEmailAndPassword(userEmail, password).then((e) => {
-              this.loader.hide();
+              this.loadingState.hide();
               this.landingPage.logInTabBtn.click();
               this.render();
             }).catch(error => {
               if (error.message.search("already") > 1) {
+                this.landingPage.hide();
                 this.landingPage.logInTabBtn.click();
+                this.render()
                 this.notifier.init("You have already registered <br/> Please login", 3000, "error");
               }
             });

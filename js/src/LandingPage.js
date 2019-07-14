@@ -165,7 +165,6 @@ class LandingPage {
    */
   hide() {
     if (this.landingWrapper) {
-
       let parentElem = this.landingWrapper.parentElement;
       parentElem && parentElem.removeChild(this.landingWrapper);
     }

@@ -108,6 +108,8 @@ input.button {
 
 /* Loading page style */
 .loading {
+
+  z-index: 20;
   position: relative;
   width: 100%;
   height: 100vh;
