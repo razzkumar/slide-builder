@@ -351,6 +351,9 @@ class SlideBuilder {
     this.styleContainers();
   }
 
+  distroy(){
+    this.container.parentElement.removeChild(this.container);
+  }
 
   /**
    * A function that style containers which is reused while resizing

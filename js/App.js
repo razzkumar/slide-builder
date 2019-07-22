@@ -25,25 +25,26 @@ class App {
     this.loadingState = new Loading(this.container);
     this.notifier = new Notification(this.container);
     this.render();
-
+    
   }
 
   render() {
-
+    
     // checking user is logged in or not
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        
         this.username = getUsernameFromEmail(user.email);
         window.localStorage.setItem("username", this.username);
         this.loadingState.hide();
         if (this.landingPage && this.landingPage.landingWrapper) {
-
           let landingElemPrent = this.landingPage.landingWrapper.parentElement;
           landingElemPrent && landingElemPrent.removeChild(this.landingPage.landingWrapper);
         }
-
-        this.slideBuilder = new SlideBuilder(this.container, this.loadingState, this.notifier);
-        this.slideBuilder.init();
+        if(!this.slideBuilder){
+          this.slideBuilder = new SlideBuilder(this.container, this.loadingState, this.notifier);
+          this.slideBuilder.init();
+        }
 
       } else {
 
